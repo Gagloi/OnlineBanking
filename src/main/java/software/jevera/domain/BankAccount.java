@@ -4,6 +4,7 @@ import main.java.software.jevera.service.bankaccount.BankAccountState;
 import main.java.software.jevera.service.bankaccount.BankAccountStateEnum;
 
 import java.time.Instant;
+import java.util.ArrayList;
 
 import static main.java.software.jevera.service.bankaccount.BankAccountStateEnum.CREATED;
 
@@ -15,6 +16,15 @@ public class BankAccount {
     private Integer hashBankAccountNumber;
     private User owner;
     private BankAccountStateEnum state = CREATED;
+    private ArrayList<Card> cards;
+
+    public ArrayList<Card> getCards() {
+        return cards;
+    }
+
+    public void setCards(ArrayList<Card> cards) {
+        this.cards = cards;
+    }
 
     public BankAccountStateEnum getCurrentState() {
         return state;
