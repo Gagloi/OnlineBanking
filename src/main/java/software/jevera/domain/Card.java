@@ -5,11 +5,11 @@ import java.time.Instant;
 public class Card {
 
     private User owner;
-    private Integer cardNumber;
-    private Short cvv;
+    private String cardNumber;
+    private String cvv;
     private Instant endDate;
 
-    public Card(User owner, Integer cardNumber, Short cvv, Instant endDate) {
+    public Card(User owner, String cardNumber, String cvv, Instant endDate) {
         this.owner = owner;
         this.cardNumber = cardNumber;
         this.cvv = cvv;
@@ -24,19 +24,19 @@ public class Card {
         this.owner = owner;
     }
 
-    public Integer getCardNumber() {
+    public String getCardNumber() {
         return cardNumber;
     }
 
-    public void setCardNumber(Integer cardNumber) {
+    public void setCardNumber(String cardNumber) {
         this.cardNumber = cardNumber;
     }
 
-    public Short getCvv() {
+    public String getCvv() {
         return cvv;
     }
 
-    public void setCvv(Short cvv) {
+    public void setCvv(String cvv) {
         this.cvv = cvv;
     }
 
