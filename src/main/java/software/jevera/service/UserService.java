@@ -39,5 +39,9 @@ public class UserService {
 
     }
 
+    public User findUserByLogin(String login){
+        return userRepository.findUserByLogin(login).orElseThrow();
+    }
+
 
 }

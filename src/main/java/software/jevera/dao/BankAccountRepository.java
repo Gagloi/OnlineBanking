@@ -1,6 +1,7 @@
 package main.java.software.jevera.dao;
 
 import main.java.software.jevera.domain.BankAccount;
+import main.java.software.jevera.domain.Card;
 import main.java.software.jevera.domain.User;
 
 import java.util.List;
@@ -13,6 +14,8 @@ public interface BankAccountRepository {
     List<BankAccount> findAll();
 
     BankAccount findByUser(User user);
+
+    void addCard(BankAccount bankAccount, Card card);
 
     Optional<BankAccount> findById(Long id);
 

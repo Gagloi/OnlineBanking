@@ -8,12 +8,22 @@ public class Card {
     private String cardNumber;
     private String cvv;
     private Instant endDate;
+    private Integer count;
 
-    public Card(User owner, String cardNumber, String cvv, Instant endDate) {
+    public Card(User owner, String cardNumber, String cvv, Instant endDate, Integer count) {
         this.owner = owner;
         this.cardNumber = cardNumber;
         this.cvv = cvv;
         this.endDate = endDate;
+        this.count = count;
+    }
+
+    public Integer getCount() {
+        return count;
+    }
+
+    public void setCount(Integer count) {
+        this.count = count;
     }
 
     public User getOwner() {

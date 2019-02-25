@@ -5,10 +5,10 @@ import main.java.software.jevera.service.UserService;
 
 public class AppFactory {
 
-    public static final UserService userService;
-    public static final CardService cardService;
+    //public static final UserService userService;
+    //public static final CardService cardService;
 
-    static{
+   /* static{
         userService = new UserService(new User);
-    }
+    }*/
 }

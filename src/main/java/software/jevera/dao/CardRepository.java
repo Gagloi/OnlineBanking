@@ -10,8 +10,8 @@ public interface CardRepository {
 
     Card save(Card card);
 
-    List<Card> findCardByUser(User user);
+    List<Card> findCardsByUser(User user);
 
-    List<Card> findByBankAccountId(BankAccount bankAccount);
+    List<Card> findAll();
 
 }

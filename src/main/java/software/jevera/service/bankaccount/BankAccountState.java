@@ -31,4 +31,8 @@ public abstract class BankAccountState {
         noStateTransition(bankAccount);
     }
 
+    public void create(BankAccount bankAccount){
+        noStateTransition(bankAccount);
+    }
+
 }
