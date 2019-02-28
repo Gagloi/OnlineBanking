@@ -42,12 +42,6 @@ public class BankAccountService {
         return bankAccountRepository.findById(id).orElseThrow();
     }
 
-    public void create(Long id){
-        BankAccount bankAccount = getBankAccount(id);
-        stateMachine.create(bankAccount);
-        bankAccountRepository.save(bankAccount);
-    }
-
     public void confirm(Long id){
         BankAccount bankAccount = getBankAccount(id);
         stateMachine.confirm(bankAccount);

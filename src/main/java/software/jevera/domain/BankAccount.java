@@ -15,6 +15,12 @@ import static software.jevera.service.bankaccount.BankAccountStateEnum.CREATED;
 public class BankAccount {
 
     private Long id;
+    private Instant creationDate;
+    private Integer balance;
+    private Integer hashBankAccountNumber;
+    private User owner;
+    private BankAccountStateEnum currentState = CREATED;
+    private ArrayList<Card> cards;
 
     public Long getId() {
         return id;
@@ -72,11 +78,5 @@ public class BankAccount {
         this.cards = cards;
     }
 
-    private Instant creationDate;
-    private Integer count;
-    private Integer hashBankAccountNumber;
-    private User owner;
-    private BankAccountStateEnum currentState = CREATED;
-    private ArrayList<Card> cards;
 
 }
