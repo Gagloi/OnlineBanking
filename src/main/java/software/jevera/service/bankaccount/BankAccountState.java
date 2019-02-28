@@ -1,7 +1,7 @@
-package main.java.software.jevera.service.bankaccount;
+package software.jevera.service.bankaccount;
 
-import main.java.software.jevera.domain.BankAccount;
-import main.java.software.jevera.exceptions.StateTransitionException;
+import software.jevera.domain.BankAccount;
+import software.jevera.exceptions.StateTransitionException;
 
 public abstract class BankAccountState {
 

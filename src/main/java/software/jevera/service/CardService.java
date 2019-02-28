@@ -1,9 +1,10 @@
-package main.java.software.jevera.service;
+package software.jevera.service;
 
-import main.java.software.jevera.dao.CardRepository;
-import main.java.software.jevera.domain.BankAccount;
-import main.java.software.jevera.domain.Card;
-import main.java.software.jevera.domain.User;
+import lombok.Getter;
+import software.jevera.dao.CardRepository;
+import software.jevera.domain.BankAccount;
+import software.jevera.domain.Card;
+import software.jevera.domain.User;
 
 import java.util.List;
 

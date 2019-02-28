@@ -1,38 +1,20 @@
-package main.java.software.jevera.domain;
+package software.jevera.domain;
 
-import main.java.software.jevera.service.bankaccount.BankAccountState;
-import main.java.software.jevera.service.bankaccount.BankAccountStateEnum;
+import lombok.Getter;
+import lombok.Setter;
+import software.jevera.service.bankaccount.BankAccountState;
+import software.jevera.service.bankaccount.BankAccountStateEnum;
 
 import java.time.Instant;
 import java.util.ArrayList;
 
-import static main.java.software.jevera.service.bankaccount.BankAccountStateEnum.CREATED;
+
+
+import static software.jevera.service.bankaccount.BankAccountStateEnum.CREATED;
 
 public class BankAccount {
 
     private Long id;
-    private Instant creationDate;
-    private Integer count;
-    private Integer hashBankAccountNumber;
-    private User owner;
-    private BankAccountStateEnum state = CREATED;
-    private ArrayList<Card> cards;
-
-    public ArrayList<Card> getCards() {
-        return cards;
-    }
-
-    public void setCards(ArrayList<Card> cards) {
-        this.cards = cards;
-    }
-
-    public BankAccountStateEnum getCurrentState() {
-        return state;
-    }
-
-    public void setCurrentState(BankAccountStateEnum state) {
-        this.state = state;
-    }
 
     public Long getId() {
         return id;
@@ -73,4 +55,28 @@ public class BankAccount {
     public void setOwner(User owner) {
         this.owner = owner;
     }
+
+    public BankAccountStateEnum getCurrentState() {
+        return currentState;
+    }
+
+    public void setCurrentState(BankAccountStateEnum currentState) {
+        this.currentState = currentState;
+    }
+
+    public ArrayList<Card> getCards() {
+        return cards;
+    }
+
+    public void setCards(ArrayList<Card> cards) {
+        this.cards = cards;
+    }
+
+    private Instant creationDate;
+    private Integer count;
+    private Integer hashBankAccountNumber;
+    private User owner;
+    private BankAccountStateEnum currentState = CREATED;
+    private ArrayList<Card> cards;
+
 }

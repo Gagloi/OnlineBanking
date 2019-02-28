@@ -1,7 +1,7 @@
-package main.java.software.jevera.configuration;
+package software.jevera.configuration;
 
-import main.java.software.jevera.service.CardService;
-import main.java.software.jevera.service.UserService;
+import software.jevera.service.CardService;
+import software.jevera.service.UserService;
 
 public class AppFactory {
 

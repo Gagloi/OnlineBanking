@@ -1,4 +1,8 @@
-package main.java.software.jevera.domain;
+package software.jevera.domain;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.Instant;
 
@@ -8,22 +12,12 @@ public class Card {
     private String cardNumber;
     private String cvv;
     private Instant endDate;
-    private Integer count;
 
-    public Card(User owner, String cardNumber, String cvv, Instant endDate, Integer count) {
+    public Card(User owner, String cardNumber, String cvv, Instant endDate) {
         this.owner = owner;
         this.cardNumber = cardNumber;
         this.cvv = cvv;
         this.endDate = endDate;
-        this.count = count;
-    }
-
-    public Integer getCount() {
-        return count;
-    }
-
-    public void setCount(Integer count) {
-        this.count = count;
     }
 
     public User getOwner() {

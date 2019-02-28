@@ -1,10 +1,10 @@
-package main.java.software.jevera.service.bankaccount;
+package software.jevera.service.bankaccount;
 
-import main.java.software.jevera.dao.BankAccountRepository;
-import main.java.software.jevera.domain.BankAccount;
-import main.java.software.jevera.domain.Card;
-import main.java.software.jevera.domain.User;
-import main.java.software.jevera.exceptions.BusinessException;
+import software.jevera.dao.BankAccountRepository;
+import software.jevera.domain.BankAccount;
+import software.jevera.domain.Card;
+import software.jevera.domain.User;
+import software.jevera.exceptions.BusinessException;
 
 import java.util.List;
 

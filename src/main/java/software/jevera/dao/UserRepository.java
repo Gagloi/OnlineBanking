@@ -1,6 +1,6 @@
-package main.java.software.jevera.dao;
+package software.jevera.dao;
 
-import main.java.software.jevera.domain.User;
+import software.jevera.domain.User;
 
 import java.util.Optional;
 

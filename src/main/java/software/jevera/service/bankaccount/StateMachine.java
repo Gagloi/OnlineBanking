@@ -1,6 +1,6 @@
-package main.java.software.jevera.service.bankaccount;
+package software.jevera.service.bankaccount;
 
-import main.java.software.jevera.domain.BankAccount;
+import software.jevera.domain.BankAccount;
 
 import java.util.List;
 import java.util.Map;

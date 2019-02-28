@@ -1,9 +1,9 @@
-package main.java.software.jevera.service.bankaccount;
+package software.jevera.service.bankaccount;
 
-import main.java.software.jevera.domain.BankAccount;
+import software.jevera.domain.BankAccount;
 
-import static main.java.software.jevera.service.bankaccount.BankAccountStateEnum.REJECTED;
-import static main.java.software.jevera.service.bankaccount.BankAccountStateEnum.RESTORED;
+import static software.jevera.service.bankaccount.BankAccountStateEnum.REJECTED;
+import static software.jevera.service.bankaccount.BankAccountStateEnum.RESTORED;
 
 public class Rejected extends BankAccountState {
     @Override

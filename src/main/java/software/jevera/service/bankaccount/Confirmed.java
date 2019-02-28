@@ -1,9 +1,9 @@
-package main.java.software.jevera.service.bankaccount;
+package software.jevera.service.bankaccount;
 
 
-import main.java.software.jevera.domain.BankAccount;
+import software.jevera.domain.BankAccount;
 
-import static main.java.software.jevera.service.bankaccount.BankAccountStateEnum.*;
+import static software.jevera.service.bankaccount.BankAccountStateEnum.*;
 
 public class Confirmed extends BankAccountState {
 

@@ -1,24 +1,26 @@
-package main.java.software.jevera.domain;
+package software.jevera.domain;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 
 public class User {
     private String passwordHash;
     private String login;
 
-    public User(){
-
-    }
-
-    public User(String password, String login) {
-        this.passwordHash = password;
+    public User(String passwordHash, String login) {
+        this.passwordHash = passwordHash;
         this.login = login;
     }
 
-    public String getPassword() {
+    public String getPasswordHash() {
         return passwordHash;
     }
 
-    public void setPassword(String password) {
-        this.passwordHash = password;
+    public void setPasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
     }
 
     public String getLogin() {
@@ -27,5 +29,8 @@ public class User {
 
     public void setLogin(String login) {
         this.login = login;
+    }
+
+    public User() {
     }
 }

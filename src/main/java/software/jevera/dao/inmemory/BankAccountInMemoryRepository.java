@@ -1,10 +1,10 @@
-package main.java.software.jevera.dao.inmemory;
+package software.jevera.dao.inmemory;
 
-import main.java.software.jevera.dao.BankAccountRepository;
-import main.java.software.jevera.domain.BankAccount;
-import main.java.software.jevera.domain.Card;
-import main.java.software.jevera.domain.User;
-import main.java.software.jevera.exceptions.BusinessException;
+import software.jevera.dao.BankAccountRepository;
+import software.jevera.domain.BankAccount;
+import software.jevera.domain.Card;
+import software.jevera.domain.User;
+import software.jevera.exceptions.BusinessException;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
@@ -35,18 +35,8 @@ public class BankAccountInMemoryRepository implements BankAccountRepository {
     }
 
     @Override
-    public BankAccount addCard(BankAccount bankAccount, Card card) {
-        if (bankAccount.getOwner().equals(card.getOwner())){
-            bankAccount.getCards().add(card);
-            Integer i = 0;
-            for(Card c: bankAccount.getCards()){
-                i += c.getCount();
-            }
-            bankAccount.setCount(i + bankAccount.getCount());
-            return bankAccount;
-        }else {
-            throw new BusinessException("Owners not equals!");
-        }
+    public void addCard(BankAccount bankAccount, Card card) {
+        bankAccounts.stream().filter(it -> it.equals(bankAccount)).findAny().get().getCards().add(card);
     }
 
     @Override
