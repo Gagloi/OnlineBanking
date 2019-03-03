@@ -1,5 +1,6 @@
 package software.jevera.dao.inmemory;
 
+import software.jevera.dao.BankAccountRepository;
 import software.jevera.dao.CardRepository;
 import software.jevera.domain.BankAccount;
 import software.jevera.domain.Card;
@@ -15,6 +16,8 @@ import java.util.stream.Collectors;
 public class CardInMemoryRepository implements CardRepository {
 
     private Set<Card> cards = new HashSet<>();
+
+    private BankAccountRepository bankAccountRepository;
 
     private AtomicLong counter = new AtomicLong(0);
 
@@ -33,6 +36,17 @@ public class CardInMemoryRepository implements CardRepository {
     @Override
     public List<Card> findAll() {
         return new ArrayList<>(cards);
+    }
+
+    @Override
+    public void addCard(User user, Card card) {
+        BankAccount bankAccount = getAccountByOwner(bankAccountRepository, user);
+        bankAccount.getCards().add(card);
+        save(card);
+    }
+
+    private BankAccount getAccountByOwner(BankAccountRepository bankAccountRepository, User owner){
+        return bankAccountRepository.findByUser(owner);
     }
 
 }

@@ -14,4 +14,6 @@ public interface CardRepository {
 
     List<Card> findAll();
 
+    void addCard(User user, Card card);
+
 }

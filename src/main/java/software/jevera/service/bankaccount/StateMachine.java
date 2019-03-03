@@ -1,6 +1,7 @@
 package software.jevera.service.bankaccount;
 
 import software.jevera.domain.BankAccount;
+import software.jevera.domain.User;
 
 import java.util.List;
 import java.util.Map;
@@ -39,8 +40,12 @@ public class StateMachine {
         getState(bankAccount).blockByUser(bankAccount);
     }
 
-    void restore(BankAccount bankAccount){
-        getState(bankAccount).restore(bankAccount);
+    void restoreByBank(BankAccount bankAccount){
+        getState(bankAccount).restoreByBank(bankAccount);
+    }
+
+    void restoreByUser(User user, BankAccount bankAccount){
+        getState(bankAccount).restoreByUser(bankAccount, user);
     }
 
 

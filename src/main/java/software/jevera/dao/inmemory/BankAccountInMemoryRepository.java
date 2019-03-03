@@ -35,12 +35,52 @@ public class BankAccountInMemoryRepository implements BankAccountRepository {
     }
 
     @Override
-    public void addCard(BankAccount bankAccount, Card card) {
-        bankAccounts.stream().filter(it -> it.equals(bankAccount)).findAny().get().getCards().add(card);
+    public Optional<BankAccount> findById(Long id) {
+        return bankAccounts.stream().filter(it -> it.getId().equals(id)).findAny();
     }
 
     @Override
-    public Optional<BankAccount> findById(Long id) {
-        return bankAccounts.stream().filter(it -> it.getId().equals(id)).findAny();
+    public void chargeBalance(Long id, Integer amount) {
+        BankAccount bankAccount = findById(id).orElseThrow(() -> new BusinessException("Can not find Bank Account"));
+        bankAccount.setBalance(bankAccount.getBalance() + amount);
+        save(bankAccount);
+    }
+
+    @Override
+    public void getMoney(String cvv, String cardNumber, User owner, Integer amount) {
+        BankAccount bankAccount = bankAccounts.stream()
+                                    .filter(it -> it.getOwner().equals(owner))
+                                    .findFirst()
+                                    .orElseThrow(() -> new BusinessException("Can not find Bank Account"));
+        Card card = bankAccount.getCards().stream()
+                .filter(it -> (it.getCardNumber().equals(cardNumber) && it.getCvv().equals(cvv)))
+                .findFirst()
+                .orElseThrow(() -> new BusinessException("Can not find card"));
+        if((bankAccount.getBalance() > amount) && isNull(card)){
+            bankAccount.setBalance(bankAccount.getBalance() - amount);
+            save(bankAccount);
+        }else{
+            throw new BusinessException("НЕХВАТАЕТ ГРОШЕЙ!");
+        }
+    }
+
+    @Override
+    public void doTransition(User fromTransaction, Card card, Integer amount) {
+        BankAccount from = findByUser(fromTransaction);
+        BankAccount to = findByUser(card.getOwner());
+
+        if(from.getBalance() > amount){
+            from.setBalance(from.getBalance() - amount);
+            to.setBalance(to.getBalance() + amount);
+            save(from);
+            save(to);
+        }else{
+            throw new BusinessException("НЕХВАТАЕТ ГРОШЕЙ!");
+        }
+
+    }
+
+    private boolean isNull(Object obj) {
+        return obj == null;
     }
 }

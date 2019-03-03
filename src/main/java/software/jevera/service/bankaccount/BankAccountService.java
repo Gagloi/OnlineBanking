@@ -38,49 +38,59 @@ public class BankAccountService {
         }
     }
 
-    private BankAccount getBankAccount(Long id){
+    private BankAccount getBankAccountById(Long id){
         return bankAccountRepository.findById(id).orElseThrow();
     }
 
+    private BankAccount getBankAccountByUser(User owner){
+        return bankAccountRepository.findByUser(owner);
+    }
+
     public void confirm(Long id){
-        BankAccount bankAccount = getBankAccount(id);
+        BankAccount bankAccount = getBankAccountById(id);
         stateMachine.confirm(bankAccount);
         bankAccountRepository.save(bankAccount);
     }
 
     public void reject(Long id){
-        BankAccount bankAccount = getBankAccount(id);
+        BankAccount bankAccount = getBankAccountById(id);
         stateMachine.reject(bankAccount);
         bankAccountRepository.save(bankAccount);
     }
 
-    public void restore(Long id){
-        BankAccount bankAccount = getBankAccount(id);
-        stateMachine.restore(bankAccount);
+    public void restoreByBank(Long id){
+        BankAccount bankAccount = getBankAccountById(id);
+        stateMachine.restoreByBank(bankAccount);
+        bankAccountRepository.save(bankAccount);
+    }
+
+    public void restoreByUser(User user){
+        BankAccount bankAccount = getBankAccountByUser(user);
+        stateMachine.restoreByUser(user, bankAccount);
         bankAccountRepository.save(bankAccount);
     }
 
     public void blockByBank(Long id){
-        BankAccount bankAccount = getBankAccount(id);
+        BankAccount bankAccount = getBankAccountById(id);
         stateMachine.blockByBank(bankAccount);
         bankAccountRepository.save(bankAccount);
     }
 
-    public void blockByUser(Long id){
-        BankAccount bankAccount = getBankAccount(id);
+    public void blockByUser(User user){
+        BankAccount bankAccount = getBankAccountByUser(user);
         stateMachine.blockByUser(bankAccount);
-        bankAccountRepository.save(bankAccount);
-    }
-
-    public void addCard(Card card, User Owner, Long idOfAccount){
-        BankAccount bankAccount = getBankAccount(idOfAccount);
-        bankAccountRepository.addCard(bankAccount, card);
         bankAccountRepository.save(bankAccount);
     }
 
     public BankAccount findByUser(User user){
         return bankAccountRepository.findByUser(user);
     }
+
+    public void chargeBalance(Long id, Integer amount){
+        bankAccountRepository.chargeBalance(id, amount);
+    }
+
+
 
 
 }

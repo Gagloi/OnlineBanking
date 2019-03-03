@@ -12,7 +12,7 @@ public class Rejected extends BankAccountState {
     }
 
     @Override
-    public void restore(BankAccount bankAccount) {
+    public void restoreByBank(BankAccount bankAccount) {
         bankAccount.setCurrentState(RESTORED);
     }
 }

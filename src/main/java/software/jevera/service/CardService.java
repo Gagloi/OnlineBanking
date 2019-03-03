@@ -16,12 +16,10 @@ public class CardService {
         this.cardRepository = cardRepository;
     }
 
-//ADDCARD add USER!!! find by user
-    public void addCard(Card card, BankAccount bankAccount){
-        bankAccount.getCards().add(card);
+    public void addCard(Card card, User user){
+        cardRepository.addCard(user, card);
         cardRepository.save(card);
     }
-//ADDCARD add USER!!! find by user
     public List<Card> getCardByUser(User user){
         return cardRepository.findCardsByUser(user);
     }

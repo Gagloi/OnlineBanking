@@ -1,6 +1,7 @@
 package software.jevera.service.bankaccount;
 
 import software.jevera.domain.BankAccount;
+import software.jevera.domain.User;
 import software.jevera.exceptions.StateTransitionException;
 
 public abstract class BankAccountState {
@@ -27,7 +28,11 @@ public abstract class BankAccountState {
         noStateTransition(bankAccount);
     }
 
-    public void restore(BankAccount bankAccount){
+    public void restoreByBank(BankAccount bankAccount){
+        noStateTransition(bankAccount);
+    }
+
+    public void restoreByUser(BankAccount bankAccount, User user){
         noStateTransition(bankAccount);
     }
 

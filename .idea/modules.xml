@@ -2,10 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Bank.iml" filepath="$PROJECT_DIR$/.idea/modules/Bank.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Bank.main.iml" filepath="$PROJECT_DIR$/.idea/modules/Bank.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Bank.test.iml" filepath="$PROJECT_DIR$/.idea/modules/Bank.test.iml" />
       <module fileurl="file://$PROJECT_DIR$/OnlineBanking.iml" filepath="$PROJECT_DIR$/OnlineBanking.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/OnlineBanking.main.iml" filepath="$PROJECT_DIR$/.idea/modules/OnlineBanking.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/OnlineBanking.test.iml" filepath="$PROJECT_DIR$/.idea/modules/OnlineBanking.test.iml" />
     </modules>
   </component>
 </project>

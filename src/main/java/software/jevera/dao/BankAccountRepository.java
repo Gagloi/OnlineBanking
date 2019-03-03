@@ -15,8 +15,12 @@ public interface BankAccountRepository {
 
     BankAccount findByUser(User user);
 
-    void addCard(BankAccount bankAccount, Card card);
-
     Optional<BankAccount> findById(Long id);
+
+    void chargeBalance(Long id, Integer amount);
+
+    void getMoney(String cvv, String cardNumber, User owner, Integer amount);
+
+    void doTransition(User fromTransaction, Card card, Integer amount);
 
 }

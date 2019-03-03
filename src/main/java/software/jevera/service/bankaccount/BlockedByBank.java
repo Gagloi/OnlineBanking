@@ -11,10 +11,8 @@ public class BlockedByBank extends BankAccountState {
         return BLOCKED_BY_BANK;
     }
 
-    //добавить рестор бай банк рестор бай юзер!
-    //начислить деньги
     @Override
-    public void restore(BankAccount bankAccount) {
+    public void restoreByBank(BankAccount bankAccount) {
         bankAccount.setCurrentState(RESTORED);
     }
 }
