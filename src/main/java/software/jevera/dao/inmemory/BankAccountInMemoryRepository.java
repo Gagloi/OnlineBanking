@@ -1,5 +1,6 @@
 package software.jevera.dao.inmemory;
 
+
 import software.jevera.dao.BankAccountRepository;
 import software.jevera.domain.BankAccount;
 import software.jevera.domain.Card;
@@ -8,7 +9,6 @@ import software.jevera.exceptions.BusinessException;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
-
 public class BankAccountInMemoryRepository implements BankAccountRepository {
 
     private Set<BankAccount> bankAccounts = new HashSet<>();
