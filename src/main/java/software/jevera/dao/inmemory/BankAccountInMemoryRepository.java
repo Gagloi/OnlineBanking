@@ -6,9 +6,12 @@ import software.jevera.domain.BankAccount;
 import software.jevera.domain.Card;
 import software.jevera.domain.User;
 import software.jevera.exceptions.BusinessException;
+import software.jevera.exceptions.CannotRestoreBankAccount;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
+
 public class BankAccountInMemoryRepository implements BankAccountRepository {
 
     private Set<BankAccount> bankAccounts = new HashSet<>();
@@ -30,8 +33,8 @@ public class BankAccountInMemoryRepository implements BankAccountRepository {
     }
 
     @Override
-    public BankAccount findByUser(User user) {
-        return bankAccounts.stream().filter(it -> it.getOwner().equals(user)).findFirst().get();
+    public Optional<BankAccount> findByUser(User user) {
+        return this.bankAccounts.stream().filter(it -> it.getOwner().equals(user)).findAny();
     }
 
     @Override
@@ -48,10 +51,7 @@ public class BankAccountInMemoryRepository implements BankAccountRepository {
 
     @Override
     public void getMoney(String cvv, String cardNumber, User owner, Integer amount) {
-        BankAccount bankAccount = bankAccounts.stream()
-                                    .filter(it -> it.getOwner().equals(owner))
-                                    .findFirst()
-                                    .orElseThrow(() -> new BusinessException("Can not find Bank Account"));
+        BankAccount bankAccount = findByUser(owner).orElseThrow(() -> new BusinessException("Can not find Bank Account"));
         Card card = bankAccount.getCards().stream()
                 .filter(it -> (it.getCardNumber().equals(cardNumber) && it.getCvv().equals(cvv)))
                 .findFirst()
@@ -66,8 +66,8 @@ public class BankAccountInMemoryRepository implements BankAccountRepository {
 
     @Override
     public void doTransition(User fromTransaction, Card card, Integer amount) {
-        BankAccount from = findByUser(fromTransaction);
-        BankAccount to = findByUser(card.getOwner());
+        BankAccount from = findByUser(fromTransaction).orElseThrow(() -> new BusinessException("Can not find Bank Account"));
+        BankAccount to = findByUser(card.getOwner()).orElseThrow(() -> new BusinessException("Can not find Bank Account"));
 
         if(from.getBalance() > amount){
             from.setBalance(from.getBalance() - amount);
@@ -78,6 +78,11 @@ public class BankAccountInMemoryRepository implements BankAccountRepository {
             throw new BusinessException("НЕХВАТАЕТ ГРОШЕЙ!");
         }
 
+    }
+
+    @Override
+    public void delete(Long id) {
+        bankAccounts = bankAccounts.stream().filter(it -> it.equals(findById(id))).collect(Collectors.toSet());
     }
 
     private boolean isNull(Object obj) {

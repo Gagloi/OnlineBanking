@@ -5,6 +5,7 @@ import software.jevera.dao.CardRepository;
 import software.jevera.domain.BankAccount;
 import software.jevera.domain.Card;
 import software.jevera.domain.User;
+import software.jevera.exceptions.BusinessException;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -46,7 +47,7 @@ public class CardInMemoryRepository implements CardRepository {
     }
 
     private BankAccount getAccountByOwner(BankAccountRepository bankAccountRepository, User owner){
-        return bankAccountRepository.findByUser(owner);
+        return bankAccountRepository.findByUser(owner).orElseThrow(() -> new BusinessException("Can not get account by owner"));
     }
 
 }

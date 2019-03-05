@@ -39,11 +39,11 @@ public class BankAccountService {
     }
 
     private BankAccount getBankAccountById(Long id){
-        return bankAccountRepository.findById(id).orElseThrow();
+        return bankAccountRepository.findById(id).orElseThrow(()-> new BusinessException("Did nit found bBank Account by id"));
     }
 
     private BankAccount getBankAccountByUser(User owner){
-        return bankAccountRepository.findByUser(owner);
+        return bankAccountRepository.findByUser(owner).orElseThrow(() -> new BusinessException("Cannot get Bank Account by user!"));
     }
 
     public void confirm(Long id){
@@ -83,11 +83,15 @@ public class BankAccountService {
     }
 
     public BankAccount findByUser(User user){
-        return bankAccountRepository.findByUser(user);
+        return bankAccountRepository.findByUser(user).orElseThrow(() -> new BusinessException("Can not find bank account by user"));
     }
 
     public void chargeBalance(Long id, Integer amount){
         bankAccountRepository.chargeBalance(id, amount);
+    }
+
+    public void delete(Long id){
+        bankAccountRepository.delete(id);
     }
 
 

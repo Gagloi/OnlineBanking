@@ -1,8 +1,6 @@
 package software.jevera.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import software.jevera.service.bankaccount.BankAccountState;
 import software.jevera.service.bankaccount.BankAccountStateEnum;
 
@@ -15,6 +13,8 @@ import static software.jevera.service.bankaccount.BankAccountStateEnum.CREATED;
 @Setter
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
+@ToString
 public class BankAccount {
 
     private Long id;
