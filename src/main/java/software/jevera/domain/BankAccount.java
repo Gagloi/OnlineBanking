@@ -19,7 +19,7 @@ public class BankAccount {
 
     private Long id;
     private Instant creationDate;
-    private Integer balance;
+    private Integer balance = 0;
     private Integer hashBankAccountNumber;
     private User owner;
     private BankAccountStateEnum currentState = CREATED;

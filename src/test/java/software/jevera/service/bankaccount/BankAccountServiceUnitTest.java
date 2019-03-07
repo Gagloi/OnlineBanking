@@ -89,8 +89,10 @@ public class BankAccountServiceUnitTest {
         BankAccount bankAccount = new BankAccount();
         bankAccount.setCurrentState(BLOCKED_BY_BANK);
         bankAccount.setOwner(user);
-        when(bankAccountRepository.findById(1234L)).thenReturn(Optional.of(bankAccount));
+        when(bankAccountRepository.findByUser(user)).thenReturn(Optional.of(bankAccount));
+        System.out.println(bankAccount.toString());
         bankAccountService.restoreByUser(user);
+        System.out.println(bankAccount.toString());
     }
 
     @Test
@@ -117,6 +119,18 @@ public class BankAccountServiceUnitTest {
 
     @Test
     public void chargeBalance() {
+        Long id = 1234L;
+        Integer amount = 10;
+        BankAccount bankAccount = new BankAccount();
+        bankAccount.setId(id);
+        when(bankAccountRepository.findById(id)).thenReturn(Optional.of(bankAccount));
+        doAnswer((i) -> {
+
+            assertEquals(id,  i.getArgument(0));
+            assertEquals(amount, i.getArgument(1));
+        return null;}).when(bankAccountRepository).chargeBalance(any(Long.class), any(Integer.class));
+        bankAccountService.chargeBalance(id, amount);
+        System.out.println(bankAccount.getBalance());
     }
 
     @Test
