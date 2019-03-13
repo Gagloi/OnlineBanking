@@ -28,4 +28,8 @@ public class CardService {
         return cardRepository.findAll();
     }
 
+    public Card save(Card card){
+        return cardRepository.save(card);
+    }
+
 }
