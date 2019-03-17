@@ -30,10 +30,10 @@ public class BankAccountInMemoryRepository implements BankAccountRepository {
         return bankAccount;
     }
 
-    @Override
-    public List<BankAccount> findAll() {
-        return new ArrayList<>(bankAccounts);
-    }
+//    @Override
+//    public List<BankAccount> findAll() {
+//        return new ArrayList<>(bankAccounts);
+//    }
 
     @Override
     public Optional<BankAccount> findByUser(User user) {

@@ -11,7 +11,7 @@ public interface BankAccountRepository {
 
     BankAccount save(BankAccount bankAccount);
 
-    List<BankAccount> findAll();
+    //List<BankAccount> findAll();
 
     Optional<BankAccount> findByUser(User user);
 

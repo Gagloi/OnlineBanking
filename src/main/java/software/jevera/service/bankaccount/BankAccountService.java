@@ -97,6 +97,13 @@ public class BankAccountService {
         bankAccountRepository.delete(id);
     }
 
+    public void doTransition(User fromTransaction, Card card, Integer amount) {
+        bankAccountRepository.doTransition(fromTransaction,card,amount);
+    }
+
+    public void getMoney(String cvv, String cardNumber, User owner, Integer amount){
+        bankAccountRepository.getMoney(cvv, cardNumber, owner, amount);
+    }
 
 
 

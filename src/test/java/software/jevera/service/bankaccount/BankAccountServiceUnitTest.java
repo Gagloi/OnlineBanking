@@ -6,9 +6,12 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import software.jevera.dao.BankAccountRepository;
 import software.jevera.domain.BankAccount;
+import software.jevera.domain.Card;
 import software.jevera.domain.User;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.*;
@@ -143,5 +146,27 @@ public class BankAccountServiceUnitTest {
         BankAccount bankAccount = new BankAccount(1234L, Instant.now(), 10,90 , user ,CREATED, null);
         bankAccountService.delete(1234L);
         verify(bankAccountRepository).delete(1234L);
+    }
+
+    @Test
+    public void doTransition(){
+        User user = new User("pwd", "user");
+        Card card = new Card(user, "1", "333", Instant.now());
+        bankAccountService.doTransition(user, card, 10);
+        verify(bankAccountRepository).doTransition(user, card, 10);
+
+    }
+
+    @Test
+    public void getMoney(){
+        User user = new User("pwd", "user");
+        Card card = new Card(user, "1", "333", Instant.now());
+        ArrayList<Card> cards = new ArrayList<>();
+        cards.add(card);
+        BankAccount bankAccount = new BankAccount(1L, Instant.now(), 0, 123, user, CREATED, cards);
+        when(bankAccountRepository.findByUser(user)).thenReturn(Optional.of(bankAccount));
+        bankAccountService.getMoney(card.getCvv(), card.getCardNumber(), user, 10);
+        verify(bankAccountRepository).getMoney(card.getCvv(), card.getCardNumber(), user, 10);
+
     }
 }
