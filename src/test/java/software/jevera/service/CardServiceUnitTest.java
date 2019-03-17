@@ -18,8 +18,11 @@ import software.jevera.service.bankaccount.StateMachine;
 
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.refEq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 
@@ -30,13 +33,12 @@ public class CardServiceUnitTest
 
     private CardRepository cardRepository;
 
-    private List<Card> cards;
+    private List<Card> cards = new ArrayList<>();
 
     @Before
     public void before(){
         cardRepository = mock(CardRepository.class);
         cardService = new CardService(cardRepository);
-        cards.add(new Card(new User(), "0", "435", Instant.now()));
     }
 
 
@@ -45,12 +47,14 @@ public class CardServiceUnitTest
     {
         User owner = new User();
         Card card = new Card(owner, "1", "333", Instant.now());
-        doAnswer((i) -> {
-            assertEquals(card, i.getArgument(0));
-            assertEquals(card.getOwner(), i.getArgument(1));
-            return null;
-        }).when(cardRepository).addCard(any(User.class), any(Card.class));
+        cards.add(card);
+        when(cardRepository.findCardsByUser(owner)).thenReturn(cards);
+
         cardService.addCard(card, owner);
+        verify(cardRepository).addCard(owner, card);
+        verify(cardRepository).save(card);
+
+
     }
 
     @Test

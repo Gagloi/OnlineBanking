@@ -8,6 +8,9 @@ import software.jevera.exceptions.BusinessException;
 
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class BankAccountService {
 
     private final BankAccountRepository bankAccountRepository;

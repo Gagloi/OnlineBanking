@@ -99,16 +99,19 @@ public class BankAccountServiceUnitTest {
     public void blockByBank() {
         BankAccount bankAccount = new BankAccount();
         bankAccount.setCurrentState(BLOCKED_BY_BANK);
+        bankAccount.setId(1234L);
         when(bankAccountRepository.findById(1234L)).thenReturn(Optional.of(bankAccount));
-        bankAccountService.restoreByUser(bankAccount.getOwner());
+        bankAccountService.blockByBank(bankAccount.getId());
     }
 
     @Test
     public void blockByUser() {
+        User user = new User("pwd", "user");
         BankAccount bankAccount = new BankAccount();
         bankAccount.setCurrentState(BLOCKED_BY_BANK);
-        when(bankAccountRepository.findById(1234L)).thenReturn(Optional.of(bankAccount));
-        bankAccountService.restoreByUser(bankAccount.getOwner());
+        bankAccount.setOwner(user);
+        when(bankAccountRepository.findByUser(user)).thenReturn(Optional.of(bankAccount));
+        bankAccountService.blockByUser(bankAccount.getOwner());
     }
 
     @Test
@@ -128,12 +131,10 @@ public class BankAccountServiceUnitTest {
         BankAccount bankAccount = new BankAccount();
         bankAccount.setId(id);
         when(bankAccountRepository.findById(id)).thenReturn(Optional.of(bankAccount));
-        doAnswer((i) -> {
-
-            assertEquals(id,  i.getArgument(0));
-            assertEquals(amount, i.getArgument(1));
-        return null;}).when(bankAccountRepository).chargeBalance(any(Long.class), any(Integer.class));
+        //when(bankAccountRepository.chargeBalance(any(Long.class), any(Integer.class)));
         bankAccountService.chargeBalance(id, amount);
+        verify(bankAccountRepository).chargeBalance(id,amount);
+
     }
 
     @Test
@@ -141,6 +142,6 @@ public class BankAccountServiceUnitTest {
         User user = new User("pwd", "user");
         BankAccount bankAccount = new BankAccount(1234L, Instant.now(), 10,90 , user ,CREATED, null);
         bankAccountService.delete(1234L);
-        assertNull(bankAccountService.findByUser(user));
+        verify(bankAccountRepository).delete(1234L);
     }
 }

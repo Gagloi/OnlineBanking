@@ -8,6 +8,9 @@ import software.jevera.domain.User;
 
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class CardService {
 
     private CardRepository cardRepository;

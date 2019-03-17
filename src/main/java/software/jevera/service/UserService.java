@@ -2,13 +2,16 @@ package software.jevera.service;
 
 import software.jevera.dao.UserRepository;
 import software.jevera.domain.User;
+import software.jevera.exceptions.BusinessException;
 import software.jevera.exceptions.UserAlreadyExist;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
+import org.springframework.stereotype.Component;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+@Component
 public class UserService {
 
     private final UserRepository userRepository;
@@ -40,7 +43,7 @@ public class UserService {
     }
 
     public User findUserByLogin(String login){
-        return userRepository.findUserByLogin(login).orElseThrow();
+        return userRepository.findUserByLogin(login).orElseThrow(() -> new BusinessException("Cannot find user with login:" + login));
     }
 
 

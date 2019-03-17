@@ -7,7 +7,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.springframework.stereotype.Component;
 
+@Component
 public class StateMachine {
 
     private final Map<BankAccountStateEnum, BankAccountState> states = new ConcurrentHashMap<>();
