@@ -1,5 +1,8 @@
 package software.jevera.service.bankaccount;
 
+import lombok.SneakyThrows;
+import software.jevera.annotation.BankAccountListener;
+import software.jevera.annotation.BlockedMethod;
 import software.jevera.dao.BankAccountRepository;
 import software.jevera.domain.BankAccount;
 import software.jevera.domain.Card;
@@ -97,10 +100,23 @@ public class BankAccountService {
         bankAccountRepository.delete(id);
     }
 
+    @BlockedMethod
+    @SneakyThrows
     public void doTransition(User fromTransaction, Card card, Integer amount) {
-        bankAccountRepository.doTransition(fromTransaction,card,amount);
-    }
+        BankAccount from = findByUser(fromTransaction);
+        BankAccount to = findByUser(card.getOwner());
+        BankAccountListener.blocked(BankAccount.class, from);
+        if(from.getBalance() > amount){
+            from.setBalance(from.getBalance() - amount);
+            to.setBalance(to.getBalance() + amount);
+            bankAccountRepository.save(from);
+            bankAccountRepository.save(to);
+        }else{
+            throw new BusinessException("НЕХВАТАЕТ ГРОШЕЙ!");
+        }
 
+    }
+    @BlockedMethod
     public void getMoney(String cvv, String cardNumber, User owner, Integer amount){
         bankAccountRepository.getMoney(cvv, cardNumber, owner, amount);
     }

@@ -15,6 +15,5 @@ import java.lang.reflect.Method;
 @Retention(value= RetentionPolicy.RUNTIME)
 public @interface BlockedMethod {
 
-    BankAccountStateEnum value();
 
 }

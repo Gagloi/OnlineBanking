@@ -69,23 +69,25 @@ public class BankAccountInMemoryRepository implements BankAccountRepository {
 
     @Override
     public void doTransition(User fromTransaction, Card card, Integer amount) {
-        BankAccount from = findByUser(fromTransaction).orElseThrow(() -> new BusinessException("Can not find Bank Account"));
-        BankAccount to = findByUser(card.getOwner()).orElseThrow(() -> new BusinessException("Can not find Bank Account"));
-
-        if(from.getBalance() > amount){
-            from.setBalance(from.getBalance() - amount);
-            to.setBalance(to.getBalance() + amount);
-            save(from);
-            save(to);
-        }else{
-            throw new BusinessException("НЕХВАТАЕТ ГРОШЕЙ!");
-        }
+//        BankAccount from = findByUser(fromTransaction).orElseThrow(() -> new BusinessException("Can not find Bank Account"));
+//        BankAccount to = findByUser(card.getOwner()).orElseThrow(() -> new BusinessException("Can not find Bank Account"));
+//
+//        if(from.getBalance() > amount){
+//            from.setBalance(from.getBalance() - amount);
+//            to.setBalance(to.getBalance() + amount);
+//            save(from);
+//            save(to);
+//        }else{
+//            throw new BusinessException("НЕХВАТАЕТ ГРОШЕЙ!");
+//        }
+        save(findByUser(fromTransaction).get());
+        save(findByUser(card.getOwner()).get());
 
     }
 
     @Override
     public void delete(Long id) {
-        bankAccounts = bankAccounts.stream().filter(it -> it.equals(findById(id))).collect(Collectors.toSet());
+        bankAccounts = bankAccounts.stream().filter(it -> it.equals(findById(id).get())).collect(Collectors.toSet());
     }
 
     private boolean isNull(Object obj) {
