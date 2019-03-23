@@ -14,9 +14,10 @@ import java.lang.reflect.Parameter;
 
 
 import static software.jevera.service.bankaccount.BankAccountStateEnum.BLOCKED_BY_BANK;
+import static software.jevera.service.bankaccount.BankAccountStateEnum.BLOCKED_BY_USER;
 
 
-public class BankAccountListener {
+public class BlockableListener {
 
     public static void blocked(Class c, BankAccount bankAccount) throws NoSuchFieldException, InstantiationException, IllegalAccessException{
         Class bankAccountService = BankAccountService.class;
@@ -26,12 +27,10 @@ public class BankAccountListener {
         Field field = c.getDeclaredField("currentState");
         field.setAccessible(true);
         BankAccountStateEnum value = (BankAccountStateEnum) field.get(bankAccount);
-        System.out.println(value);
         for (Method m: methods){
             Annotation[] annotations = m.getDeclaredAnnotations();
             for (Annotation annotation: annotations){
-                System.out.println("hii");
-                if (annotation.annotationType().equals(BlockedMethod.class) && value.equals(BLOCKED_BY_BANK)) {
+                if (annotation.annotationType().equals(Blockable.class) && (value.equals(BLOCKED_BY_BANK) || value.equals(BLOCKED_BY_USER))) {
                     throw new BusinessException("Неа!");
                 }
             }

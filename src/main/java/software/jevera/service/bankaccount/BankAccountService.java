@@ -1,15 +1,13 @@
 package software.jevera.service.bankaccount;
 
 import lombok.SneakyThrows;
-import software.jevera.annotation.BankAccountListener;
-import software.jevera.annotation.BlockedMethod;
+import software.jevera.annotation.Blockable;
+import software.jevera.annotation.BlockableListener;
 import software.jevera.dao.BankAccountRepository;
 import software.jevera.domain.BankAccount;
 import software.jevera.domain.Card;
 import software.jevera.domain.User;
 import software.jevera.exceptions.BusinessException;
-
-import java.util.List;
 
 import org.springframework.stereotype.Component;
 
@@ -52,18 +50,6 @@ public class BankAccountService {
         return bankAccountRepository.findByUser(owner).orElseThrow(() -> new BusinessException("Cannot get Bank Account by user!"));
     }
 
-    public void confirm(Long id){
-        BankAccount bankAccount = getBankAccountById(id);
-        stateMachine.confirm(bankAccount);
-        bankAccountRepository.save(bankAccount);
-    }
-
-    public void reject(Long id){
-        BankAccount bankAccount = getBankAccountById(id);
-        stateMachine.reject(bankAccount);
-        bankAccountRepository.save(bankAccount);
-    }
-
     public void restoreByBank(Long id){
         BankAccount bankAccount = getBankAccountById(id);
         stateMachine.restoreByBank(bankAccount);
@@ -100,12 +86,13 @@ public class BankAccountService {
         bankAccountRepository.delete(id);
     }
 
-    @BlockedMethod
+    @Blockable
     @SneakyThrows
     public void doTransition(User fromTransaction, Card card, Integer amount) {
         BankAccount from = findByUser(fromTransaction);
         BankAccount to = findByUser(card.getOwner());
-        BankAccountListener.blocked(BankAccount.class, from);
+        BlockableListener.blocked(BankAccount.class, from);
+        BlockableListener.blocked(BankAccount.class, to);
         if(from.getBalance() > amount){
             from.setBalance(from.getBalance() - amount);
             to.setBalance(to.getBalance() + amount);
@@ -116,11 +103,22 @@ public class BankAccountService {
         }
 
     }
-    @BlockedMethod
+    @Blockable
+    @SneakyThrows
     public void getMoney(String cvv, String cardNumber, User owner, Integer amount){
-        bankAccountRepository.getMoney(cvv, cardNumber, owner, amount);
+        BankAccount bankAccount = findByUser(owner);
+        BlockableListener.blocked(BankAccount.class, bankAccount);
+        Card card = bankAccount.getCards().stream()
+                .filter(it -> (it.getCardNumber().equals(cardNumber) && it.getCvv().equals(cvv)))
+                .findFirst()
+                .orElseThrow(() -> new BusinessException("Bad credentials"));
+        if(bankAccount.getBalance() > amount){
+            bankAccount.setBalance(bankAccount.getBalance() - amount);
+            bankAccountRepository.save(bankAccount);
+        }else{
+            throw new BusinessException("НЕХВАТАЕТ ГРОШЕЙ!");
+        }
+        //bankAccountRepository.getMoney(cvv, cardNumber, owner, amount);
     }
-
-
 
 }

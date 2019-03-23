@@ -19,9 +19,9 @@ public interface BankAccountRepository {
 
     void chargeBalance(Long id, Integer amount);
 
-    void getMoney(String cvv, String cardNumber, User owner, Integer amount);
+    //void getMoney(String cvv, String cardNumber, User owner, Integer amount);
 
-    void doTransition(User fromTransaction, Card card, Integer amount);
+    //void doTransition(User fromTransaction, Card card, Integer amount);
 
     void delete(Long delete);
 

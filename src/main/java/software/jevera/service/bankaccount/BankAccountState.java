@@ -12,14 +12,6 @@ public abstract class BankAccountState {
 
     public abstract BankAccountStateEnum getStateName();
 
-    public void confirm(BankAccount bankAccount){
-        noStateTransition(bankAccount);
-    }
-
-    public void reject(BankAccount bankAccount){
-        noStateTransition(bankAccount);
-    }
-
     public void blockByBank(BankAccount bankAccount){
         noStateTransition(bankAccount);
     }
@@ -36,7 +28,7 @@ public abstract class BankAccountState {
         noStateTransition(bankAccount);
     }
 
-    public void create(BankAccount bankAccount){
+    public void activate(BankAccount bankAccount){
         noStateTransition(bankAccount);
     }
 

@@ -50,7 +50,7 @@ public class BankAccountServiceUnitTest {
     public void createBankAccount() {
         User user = new User("pwd", "user");
         User hacker = new User("pwd", "hacker");
-        BankAccount bankAccount = new BankAccount(null, Instant.now(), 10,90 , hacker ,CREATED, null);
+        BankAccount bankAccount = new BankAccount(null, Instant.now(), 10,90 , hacker ,ACTIVE, null);
         when(bankAccountRepository.save(bankAccount)).thenReturn(bankAccount);
 
         BankAccount result = bankAccountService.createBankAccount(bankAccount, user);
@@ -64,22 +64,6 @@ public class BankAccountServiceUnitTest {
 
     }
 
-    @Test
-    public void confirm() {
-        BankAccount bankAccount = new BankAccount();
-        bankAccount.setCurrentState(CREATED);
-        when(bankAccountRepository.findById(1234L)).thenReturn(Optional.of(bankAccount));
-        bankAccountService.confirm(1234L);
-
-    }
-
-    @Test
-    public void reject() {
-        BankAccount bankAccount = new BankAccount();
-        bankAccount.setCurrentState(CREATED);
-        when(bankAccountRepository.findById(1234L)).thenReturn(Optional.of(bankAccount));
-        bankAccountService.reject(1234L);
-    }
 
     @Test
     public void restoreByBank() {
@@ -146,7 +130,7 @@ public class BankAccountServiceUnitTest {
     @Test
     public void delete() {
         User user = new User("pwd", "user");
-        BankAccount bankAccount = new BankAccount(1234L, Instant.now(), 10,90 , user ,CREATED, null);
+        BankAccount bankAccount = new BankAccount(1234L, Instant.now(), 10,90 , user ,ACTIVE, null);
         bankAccountService.delete(1234L);
         verify(bankAccountRepository).delete(1234L);
     }
@@ -154,14 +138,22 @@ public class BankAccountServiceUnitTest {
     @Test
     @SneakyThrows
     public void doTransition(){
-        User user = new User("pwd", "user");
-        Card card = new Card(user, "1", "333", Instant.now());
-        BankAccount bankAccount = new BankAccount();
-        bankAccount.setBalance(11);
-        bankAccount.setCurrentState(CREATED);
-        when(bankAccountRepository.findByUser(user)).thenReturn(Optional.of(bankAccount));
+        User user = new User("pwd", "user");//From user, who wants to do transition
+
+        User userTo = new User("pwd", "userTo");//To user, where transition is implemented
+        Card card = new Card(userTo, "1", "333", Instant.now());
+
+        BankAccount bankAccountFrom = new BankAccount(); //From bank account, who wants to do transition
+        bankAccountFrom.setBalance(11);
+        bankAccountFrom.setCurrentState(ACTIVE);
+
+        BankAccount bankAccountTo = new BankAccount(); //To bank account, where transition is implemented
+
+        when(bankAccountRepository.findByUser(user)).thenReturn(Optional.of(bankAccountFrom));
+        when(bankAccountRepository.findByUser(userTo)).thenReturn(Optional.of(bankAccountTo));
         bankAccountService.doTransition(user, card, 10);
-        //verify(bankAccountRepository).doTransition(user, card, 10);
+        verify(bankAccountRepository).save(bankAccountFrom);
+        verify(bankAccountRepository).save(bankAccountTo);
 
     }
 
@@ -171,10 +163,10 @@ public class BankAccountServiceUnitTest {
         Card card = new Card(user, "1", "333", Instant.now());
         ArrayList<Card> cards = new ArrayList<>();
         cards.add(card);
-        BankAccount bankAccount = new BankAccount(1L, Instant.now(), 0, 123, user, CREATED, cards);
+        BankAccount bankAccount = new BankAccount(1L, Instant.now(), 11, 123, user, ACTIVE, cards);
         when(bankAccountRepository.findByUser(user)).thenReturn(Optional.of(bankAccount));
         bankAccountService.getMoney(card.getCvv(), card.getCardNumber(), user, 10);
-        verify(bankAccountRepository).getMoney(card.getCvv(), card.getCardNumber(), user, 10);
+        verify(bankAccountRepository).save(bankAccount);
 
     }
 }
