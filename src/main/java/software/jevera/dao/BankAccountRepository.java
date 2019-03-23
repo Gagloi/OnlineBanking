@@ -17,7 +17,7 @@ public interface BankAccountRepository {
 
     Optional<BankAccount> findById(Long id);
 
-    void chargeBalance(Long id, Integer amount);
+    //void chargeBalance(Long id, Integer amount);
 
     //void getMoney(String cvv, String cardNumber, User owner, Integer amount);
 

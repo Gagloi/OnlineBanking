@@ -41,12 +41,12 @@ public class BankAccountInMemoryRepository implements BankAccountRepository {
         return bankAccounts.stream().filter(it -> it.getId().equals(id)).findAny();
     }
 
-    @Override
-    public void chargeBalance(Long id, Integer amount) {
-        BankAccount bankAccount = findById(id).orElseThrow(() -> new BusinessException("Can not find Bank Account"));
-        bankAccount.setBalance(bankAccount.getBalance() + amount);
-        save(bankAccount);
-    }
+//    @Override
+//    public void chargeBalance(Long id, Integer amount) {
+//        BankAccount bankAccount = findById(id).orElseThrow(() -> new BusinessException("Can not find Bank Account"));
+//        bankAccount.setBalance(bankAccount.getBalance() + amount);
+//        save(bankAccount);
+//    }
 
 //    @Override
 //    public void getMoney(String cvv, String cardNumber, User owner, Integer amount) {

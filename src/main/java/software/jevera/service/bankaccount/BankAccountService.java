@@ -43,7 +43,7 @@ public class BankAccountService {
     }
 
     private BankAccount getBankAccountById(Long id){
-        return bankAccountRepository.findById(id).orElseThrow(()-> new BusinessException("Did nit found bBank Account by id"));
+        return bankAccountRepository.findById(id).orElseThrow(()-> new BusinessException("Did not found Bank Account by id"));
     }
 
     private BankAccount getBankAccountByUser(User owner){
@@ -78,8 +78,18 @@ public class BankAccountService {
         return bankAccountRepository.findByUser(user).orElseThrow(() -> new BusinessException("Can not find bank account by user"));
     }
 
+    @Blockable
+    @SneakyThrows
     public void chargeBalance(Long id, Integer amount){
-        bankAccountRepository.chargeBalance(id, amount);
+        BankAccount bankAccount = bankAccountRepository.findById(id).orElseThrow(() -> new BusinessException("Can not find Bank Account"));
+        BlockableListener.blocked(BankAccount.class, bankAccount);
+        if(isNegative(amount)) {
+            bankAccount.setBalance(bankAccount.getBalance() + amount);
+            bankAccountRepository.save(bankAccount);
+        }else{
+            throw new BusinessException("Низья отрицательное число ворюга!");
+        }
+        //bankAccountRepository.chargeBalance(id, amount);
     }
 
     public void delete(Long id){
@@ -99,7 +109,7 @@ public class BankAccountService {
             bankAccountRepository.save(from);
             bankAccountRepository.save(to);
         }else{
-            throw new BusinessException("НЕХВАТАЕТ ГРОШЕЙ!");
+            throw new BusinessException("Ты бомж!");
         }
 
     }
@@ -116,9 +126,13 @@ public class BankAccountService {
             bankAccount.setBalance(bankAccount.getBalance() - amount);
             bankAccountRepository.save(bankAccount);
         }else{
-            throw new BusinessException("НЕХВАТАЕТ ГРОШЕЙ!");
+            throw new BusinessException("Ты бомж!");
         }
         //bankAccountRepository.getMoney(cvv, cardNumber, owner, amount);
+    }
+
+    private boolean isNegative(Integer amount){
+        return amount > 0;
     }
 
 }

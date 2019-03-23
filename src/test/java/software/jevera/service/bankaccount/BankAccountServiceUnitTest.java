@@ -123,7 +123,8 @@ public class BankAccountServiceUnitTest {
         when(bankAccountRepository.findById(id)).thenReturn(Optional.of(bankAccount));
         //when(bankAccountRepository.chargeBalance(any(Long.class), any(Integer.class)));
         bankAccountService.chargeBalance(id, amount);
-        verify(bankAccountRepository).chargeBalance(id,amount);
+
+        verify(bankAccountRepository).save(bankAccount);
 
     }
 
@@ -163,7 +164,7 @@ public class BankAccountServiceUnitTest {
         Card card = new Card(user, "1", "333", Instant.now());
         ArrayList<Card> cards = new ArrayList<>();
         cards.add(card);
-        BankAccount bankAccount = new BankAccount(1L, Instant.now(), 11, 123, user, ACTIVE, cards);
+        BankAccount bankAccount = new BankAccount(1L, Instant.now(), 11 , 123, user, ACTIVE, cards);
         when(bankAccountRepository.findByUser(user)).thenReturn(Optional.of(bankAccount));
         bankAccountService.getMoney(card.getCvv(), card.getCardNumber(), user, 10);
         verify(bankAccountRepository).save(bankAccount);
