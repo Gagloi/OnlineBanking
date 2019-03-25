@@ -98,11 +98,37 @@ public class BankAccountService {
     }
 
     public void doTransition(User fromTransaction, Card card, Integer amount) {
-        bankAccountRepository.doTransition(fromTransaction,card,amount);
+        BankAccount from = findByUser(fromTransaction);
+        BankAccount to = findByUser(card.getOwner());
+
+        if(from.getBalance() > amount){
+            from.setBalance(from.getBalance() - amount);
+            to.setBalance(to.getBalance() + amount);
+            bankAccountRepository.save(from);
+            bankAccountRepository.save(to);
+        }else{
+            throw new BusinessException("НЕХВАТАЕТ ГРОШЕЙ!");
+        }
+        //bankAccountRepository.doTransition(fromTransaction,card,amount);
     }
 
     public void getMoney(String cvv, String cardNumber, User owner, Integer amount){
-        bankAccountRepository.getMoney(cvv, cardNumber, owner, amount);
+        BankAccount bankAccount = findByUser(owner);
+        Card card = bankAccount.getCards().stream()
+                .filter(it -> (it.getCardNumber().equals(cardNumber) && it.getCvv().equals(cvv)))
+                .findFirst()
+                .orElseThrow(() -> new BusinessException("Can not find card"));
+        if((bankAccount.getBalance() > amount) && isNull(card)){
+            bankAccount.setBalance(bankAccount.getBalance() - amount);
+            bankAccountRepository.save(bankAccount);
+        }else{
+            throw new BusinessException("НЕХВАТАЕТ ГРОШЕЙ!");
+        }
+        //bankAccountRepository.getMoney(cvv, cardNumber, owner, amount);
+    }
+
+    private boolean isNull(Object obj) {
+        return obj == null;
     }
 
 

@@ -54,33 +54,13 @@ public class BankAccountInMemoryRepository implements BankAccountRepository {
 
     @Override
     public void getMoney(String cvv, String cardNumber, User owner, Integer amount) {
-        BankAccount bankAccount = findByUser(owner).orElseThrow(() -> new BusinessException("Can not find Bank Account"));
-        Card card = bankAccount.getCards().stream()
-                .filter(it -> (it.getCardNumber().equals(cardNumber) && it.getCvv().equals(cvv)))
-                .findFirst()
-                .orElseThrow(() -> new BusinessException("Can not find card"));
-        if((bankAccount.getBalance() > amount) && isNull(card)){
-            bankAccount.setBalance(bankAccount.getBalance() - amount);
-            save(bankAccount);
-        }else{
-            throw new BusinessException("НЕХВАТАЕТ ГРОШЕЙ!");
-        }
+        save(findByUser(owner).get());
     }
 
     @Override
     public void doTransition(User fromTransaction, Card card, Integer amount) {
-        BankAccount from = findByUser(fromTransaction).orElseThrow(() -> new BusinessException("Can not find Bank Account"));
-        BankAccount to = findByUser(card.getOwner()).orElseThrow(() -> new BusinessException("Can not find Bank Account"));
-
-        if(from.getBalance() > amount){
-            from.setBalance(from.getBalance() - amount);
-            to.setBalance(to.getBalance() + amount);
-            save(from);
-            save(to);
-        }else{
-            throw new BusinessException("НЕХВАТАЕТ ГРОШЕЙ!");
-        }
-
+        save(findByUser(fromTransaction).get());
+        save(findByUser(card.getOwner()).get());
     }
 
     @Override
@@ -88,7 +68,5 @@ public class BankAccountInMemoryRepository implements BankAccountRepository {
         bankAccounts = bankAccounts.stream().filter(it -> it.equals(findById(id))).collect(Collectors.toSet());
     }
 
-    private boolean isNull(Object obj) {
-        return obj == null;
-    }
+
 }
