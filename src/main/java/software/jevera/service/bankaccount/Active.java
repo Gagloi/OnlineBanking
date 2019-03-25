@@ -5,11 +5,11 @@ import software.jevera.domain.BankAccount;
 
 import static software.jevera.service.bankaccount.BankAccountStateEnum.*;
 
-public class Confirmed extends BankAccountState {
+public class Active extends BankAccountState {
 
     @Override
     public BankAccountStateEnum getStateName() {
-        return CONFIRMED;
+        return ACTIVE;
     }
 
     @Override

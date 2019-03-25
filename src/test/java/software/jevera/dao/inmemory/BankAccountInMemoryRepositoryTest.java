@@ -7,9 +7,11 @@ import org.junit.Test;
 
 import software.jevera.domain.BankAccount;
 import software.jevera.domain.User;
+import software.jevera.service.bankaccount.BankAccountStateEnum;
 
 import static org.junit.Assert.*;
-import static software.jevera.service.bankaccount.BankAccountStateEnum.CREATED;
+import static software.jevera.service.bankaccount.BankAccountStateEnum.ACTIVE;
+
 
 public class BankAccountInMemoryRepositoryTest
 {
@@ -20,7 +22,7 @@ public class BankAccountInMemoryRepositoryTest
     public void save()
     {
         User user = new User("pwd", "user");
-        BankAccount bankAccount = new BankAccount(1234L, Instant.now(), 10,90 , user ,CREATED, null);
+        BankAccount bankAccount = new BankAccount(1234L, Instant.now(), 10,90 , user , ACTIVE, null);
         BankAccount saved = bankAccountInMemoryRepository.save(bankAccount);
         Optional<BankAccount> byUser = bankAccountInMemoryRepository.findByUser(user);
         assertEquals(byUser.get(), bankAccount);
@@ -31,7 +33,7 @@ public class BankAccountInMemoryRepositoryTest
     public void findByUser()
     {
         User user = new User("pwd", "user");
-        BankAccount bankAccount = new BankAccount(1234L, Instant.now(), 10,90 , user ,CREATED, null);
+        BankAccount bankAccount = new BankAccount(1234L, Instant.now(), 10,90 , user ,ACTIVE, null);
         bankAccountInMemoryRepository.save(bankAccount);
         BankAccount bankAccount1 = bankAccountInMemoryRepository.findByUser(user).get();
         assertEquals(bankAccount1, bankAccount);

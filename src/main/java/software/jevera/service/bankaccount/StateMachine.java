@@ -22,16 +22,8 @@ public class StateMachine {
         return states.get(bankAccount.getCurrentState());
     }
 
-    void confirm(BankAccount bankAccount){
-        getState(bankAccount).confirm(bankAccount);
-    }
-
-    void create(BankAccount bankAccount){
-        getState(bankAccount).create(bankAccount);
-    }
-
-    void reject(BankAccount bankAccount){
-        getState(bankAccount).reject(bankAccount);
+    void activate(BankAccount bankAccount){
+        getState(bankAccount).activate(bankAccount);
     }
 
     void blockByBank(BankAccount bankAccount){

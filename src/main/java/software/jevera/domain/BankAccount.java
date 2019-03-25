@@ -8,8 +8,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 
 
-
-import static software.jevera.service.bankaccount.BankAccountStateEnum.CREATED;
+import static software.jevera.service.bankaccount.BankAccountStateEnum.ACTIVE;
 @Setter
 @Getter
 @AllArgsConstructor
@@ -22,7 +21,7 @@ public class BankAccount {
     private Integer balance = 0;
     private Integer hashBankAccountNumber;
     private User owner;
-    private BankAccountStateEnum currentState = CREATED;
+    private BankAccountStateEnum currentState = ACTIVE;
     private ArrayList<Card> cards;
 
 //    public Long getId() {

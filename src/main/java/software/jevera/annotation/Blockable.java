@@ -13,8 +13,7 @@ import java.lang.reflect.Method;
 
 @Target(value = ElementType.METHOD)
 @Retention(value= RetentionPolicy.RUNTIME)
-public @interface BlockedMethod {
+public @interface Blockable {
 
-    BankAccountStateEnum value();
 
 }
