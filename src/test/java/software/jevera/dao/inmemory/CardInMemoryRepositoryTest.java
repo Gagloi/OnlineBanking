@@ -65,18 +65,18 @@ public class CardInMemoryRepositoryTest {
 
     }
 
-    @Test
-    public void addCard() {
-        Card card = new Card("1234", "234", Instant.now());
-        User user = new User("123", "Ioi");
-        BankAccount bankAccount = new BankAccount();
-        bankAccount.setOwner(user);
-
-        ArrayList<Card> cards = new ArrayList<>();
-        cards.add(new Card("123423", "423", Instant.now()));
-        bankAccount.setCards(cards);
-
-        cardInMemoryRepository.addCard(user, card);
-        assertEquals(card, cardInMemoryRepository.findCardsByUser(user));
-    }
+//    @Test
+//    public void addCard() {
+//        Card card = new Card("1234", "234", Instant.now());
+//        User user = new User("123", "Ioi");
+//        BankAccount bankAccount = new BankAccount();
+//        bankAccount.setOwner(user);
+//
+//        ArrayList<Card> cards = new ArrayList<>();
+//        cards.add(new Card("123423", "423", Instant.now()));
+//        bankAccount.setCards(cards);
+//
+//        cardInMemoryRepository.addCard(user, card);
+//        assertEquals(card, cardInMemoryRepository.findCardsByUser(user));
+//    }
 }

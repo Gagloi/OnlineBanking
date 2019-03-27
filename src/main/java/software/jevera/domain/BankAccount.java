@@ -23,7 +23,7 @@ public class BankAccount {
     private Integer hashBankAccountNumber;
     private User owner;
     private BankAccountStateEnum currentState = ACTIVE;
-    private ArrayList<Card> cards;
+    private List<Card> cards = new ArrayList<>();
 
 //    public Long getId() {
 //        return id;

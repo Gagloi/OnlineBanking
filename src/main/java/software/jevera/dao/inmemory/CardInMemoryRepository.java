@@ -21,7 +21,7 @@ public class CardInMemoryRepository implements CardRepository {
 
     private Set<Card> cards = new HashSet<>();
 
-    private BankAccountRepository bankAccountRepository;
+//    private BankAccountRepository bankAccountRepository;
 
     @Override
     public Card save(Card card) {
@@ -43,16 +43,16 @@ public class CardInMemoryRepository implements CardRepository {
         return new ArrayList<>(cards);
     }
 
-    @Override
-    public void addCard(User user, Card card) {
-        BankAccount bankAccount = getAccountByOwner(bankAccountRepository, user);
-        bankAccount.getCards().add(card);
-        save(card);
-    }
+//    @Override
+//    public void addCard(User user, Card card) {
+//        BankAccount bankAccount = getAccountByOwner(bankAccountRepository, user);
+//        bankAccount.getCards().add(card);
+//        save(card);
+//    }
 
-    private BankAccount getAccountByOwner(BankAccountRepository bankAccountRepository, User owner){
-        return bankAccountRepository.findByUser(owner).orElseThrow(() -> new BusinessException("Can not get account by owner"));
-    }
+//    private BankAccount getAccountByOwner(BankAccountRepository bankAccountRepository, User owner){
+//        return bankAccountRepository.findByUser(owner).orElseThrow(() -> new BusinessException("Can not get account by owner"));
+//    }
 
     private boolean isCardAlreadyExist(String cardNumber) {
         return cards.stream().anyMatch(card -> card.getCardNumber().equals(cardNumber));

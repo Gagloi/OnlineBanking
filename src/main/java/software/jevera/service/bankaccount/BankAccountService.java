@@ -8,6 +8,8 @@ import software.jevera.exceptions.BusinessException;
 
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+
 @Component
 public class BankAccountService {
 
@@ -135,6 +137,18 @@ public class BankAccountService {
         {
             throw new BusinessException("Твоя карта заблокирована!");
         }
+    }
+
+    public void addCard(User owner, Card card){
+        BankAccount bankAccount = getBankAccountByUser(owner);
+        if (bankAccount.getCards().isEmpty()){
+            ArrayList<Card> cards = new ArrayList<>();
+            cards.add(card);
+            bankAccount.setCards(cards);
+        }else{
+            bankAccount.getCards().add(card);
+        }
+        bankAccountRepository.save(bankAccount);
     }
 
 }
