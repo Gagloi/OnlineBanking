@@ -1,9 +1,17 @@
 package software.jevera.service.bankaccount;
 
+import lombok.SneakyThrows;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runner.notification.RunListener;
 import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringRunner;
 import software.jevera.dao.BankAccountRepository;
 import software.jevera.domain.BankAccount;
 import software.jevera.domain.Card;
@@ -17,21 +25,19 @@ import java.util.Optional;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static software.jevera.service.bankaccount.BankAccountStateEnum.*;
-
+@RunWith(SpringRunner.class)
+@ContextConfiguration(classes = {BankAccountService.class, StateMachine.class, BlockedByBank.class,
+        Restored.class, Active.class, BlockedByUser.class})
 public class BankAccountServiceUnitTest {
 
+    @Autowired
     private BankAccountService bankAccountService;
 
+    @MockBean
     private BankAccountRepository bankAccountRepository;
 
+    @MockBean
     private StateMachine stateMachine;
-
-    @Before
-    public void before(){
-        bankAccountRepository = mock(BankAccountRepository.class);
-        stateMachine = mock(StateMachine.class);
-        bankAccountService = new BankAccountService(bankAccountRepository, stateMachine);
-    }
 
     @Test
     public void getBankAccountRepository() {
@@ -47,7 +53,7 @@ public class BankAccountServiceUnitTest {
     public void createBankAccount() {
         User user = new User("pwd", "user");
         User hacker = new User("pwd", "hacker");
-        BankAccount bankAccount = new BankAccount(null, Instant.now(), 10,90 , hacker ,CREATED, null);
+        BankAccount bankAccount = new BankAccount(null, Instant.now(), 10,90 , hacker ,ACTIVE, null);
         when(bankAccountRepository.save(bankAccount)).thenReturn(bankAccount);
 
         BankAccount result = bankAccountService.createBankAccount(bankAccount, user);
@@ -61,22 +67,6 @@ public class BankAccountServiceUnitTest {
 
     }
 
-    @Test
-    public void confirm() {
-        BankAccount bankAccount = new BankAccount();
-        bankAccount.setCurrentState(CREATED);
-        when(bankAccountRepository.findById(1234L)).thenReturn(Optional.of(bankAccount));
-        bankAccountService.confirm(1234L);
-
-    }
-
-    @Test
-    public void reject() {
-        BankAccount bankAccount = new BankAccount();
-        bankAccount.setCurrentState(CREATED);
-        when(bankAccountRepository.findById(1234L)).thenReturn(Optional.of(bankAccount));
-        bankAccountService.reject(1234L);
-    }
 
     @Test
     public void restoreByBank() {
@@ -111,10 +101,12 @@ public class BankAccountServiceUnitTest {
     public void blockByUser() {
         User user = new User("pwd", "user");
         BankAccount bankAccount = new BankAccount();
-        bankAccount.setCurrentState(BLOCKED_BY_BANK);
+        bankAccount.setCurrentState(ACTIVE);
+        System.out.println("/////////" + bankAccount.getCurrentState());
         bankAccount.setOwner(user);
         when(bankAccountRepository.findByUser(user)).thenReturn(Optional.of(bankAccount));
         bankAccountService.blockByUser(bankAccount.getOwner());
+        System.out.println("/////////" + bankAccount.getCurrentState());
     }
 
     @Test
@@ -134,26 +126,40 @@ public class BankAccountServiceUnitTest {
         BankAccount bankAccount = new BankAccount();
         bankAccount.setId(id);
         when(bankAccountRepository.findById(id)).thenReturn(Optional.of(bankAccount));
-        //when(bankAccountRepository.chargeBalance(any(Long.class), any(Integer.class)));
+
         bankAccountService.chargeBalance(id, amount);
-        verify(bankAccountRepository).chargeBalance(id,amount);
+
+        verify(bankAccountRepository).save(bankAccount);
 
     }
 
     @Test
     public void delete() {
         User user = new User("pwd", "user");
-        BankAccount bankAccount = new BankAccount(1234L, Instant.now(), 10,90 , user ,CREATED, null);
+        BankAccount bankAccount = new BankAccount(1234L, Instant.now(), 10,90 , user ,ACTIVE, null);
         bankAccountService.delete(1234L);
         verify(bankAccountRepository).delete(1234L);
     }
 
     @Test
+    @SneakyThrows
     public void doTransition(){
-        User user = new User("pwd", "user");
-        Card card = new Card(user, "1", "333", Instant.now());
-        //bankAccountService.doTransition(user, card, 10);
-        // verify(bankAccountRepository).doTransition(user, card, 10);
+        User user = new User("pwd", "user");//From user, who wants to do transition
+
+        User userTo = new User("pwd", "userTo");//To user, where transition is implemented
+        Card card = new Card(userTo, "1", "333", Instant.now());
+
+        BankAccount bankAccountFrom = new BankAccount(); //From bank account, who wants to do transition
+        bankAccountFrom.setBalance(11);
+        bankAccountFrom.setCurrentState(ACTIVE);
+
+        BankAccount bankAccountTo = new BankAccount(); //To bank account, where transition is implemented
+
+        when(bankAccountRepository.findByUser(user)).thenReturn(Optional.of(bankAccountFrom));
+        when(bankAccountRepository.findByUser(userTo)).thenReturn(Optional.of(bankAccountTo));
+        bankAccountService.doTransition(user, card, 10);
+        verify(bankAccountRepository).save(bankAccountFrom);
+        verify(bankAccountRepository).save(bankAccountTo);
 
     }
 
@@ -163,10 +169,10 @@ public class BankAccountServiceUnitTest {
         Card card = new Card(user, "1", "333", Instant.now());
         ArrayList<Card> cards = new ArrayList<>();
         cards.add(card);
-        BankAccount bankAccount = new BankAccount(1L, Instant.now(), 0, 123, user, CREATED, cards);
+        BankAccount bankAccount = new BankAccount(1L, Instant.now(), 11 , 123, user, ACTIVE, cards);
         when(bankAccountRepository.findByUser(user)).thenReturn(Optional.of(bankAccount));
-        //bankAccountService.getMoney(card.getCvv(), card.getCardNumber(), user, 10);
-        //verify(bankAccountRepository).getMoney(card.getCvv(), card.getCardNumber(), user, 10);
+        bankAccountService.getMoney(card.getCvv(), card.getCardNumber(), user, 10);
+        verify(bankAccountRepository).save(bankAccount);
 
     }
 }

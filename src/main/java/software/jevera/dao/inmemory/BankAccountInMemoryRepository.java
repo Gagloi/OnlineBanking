@@ -30,10 +30,6 @@ public class BankAccountInMemoryRepository implements BankAccountRepository {
         return bankAccount;
     }
 
-//    @Override
-//    public List<BankAccount> findAll() {
-//        return new ArrayList<>(bankAccounts);
-//    }
 
     @Override
     public Optional<BankAccount> findByUser(User user) {
@@ -46,27 +42,8 @@ public class BankAccountInMemoryRepository implements BankAccountRepository {
     }
 
     @Override
-    public void chargeBalance(Long id, Integer amount) {
-        BankAccount bankAccount = findById(id).orElseThrow(() -> new BusinessException("Can not find Bank Account"));
-        bankAccount.setBalance(bankAccount.getBalance() + amount);
-        save(bankAccount);
-    }
-
-    @Override
-    public void getMoney(String cvv, String cardNumber, User owner, Integer amount) {
-        save(findByUser(owner).get());
-    }
-
-    @Override
-    public void doTransition(User fromTransaction, Card card, Integer amount) {
-        save(findByUser(fromTransaction).get());
-        save(findByUser(card.getOwner()).get());
-    }
-
-    @Override
     public void delete(Long id) {
-        bankAccounts = bankAccounts.stream().filter(it -> it.equals(findById(id))).collect(Collectors.toSet());
+        bankAccounts = bankAccounts.stream().filter(it -> !it.equals(findById(id).get())).collect(Collectors.toSet());
     }
-
 
 }

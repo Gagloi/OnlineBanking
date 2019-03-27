@@ -11,17 +11,9 @@ public interface BankAccountRepository {
 
     BankAccount save(BankAccount bankAccount);
 
-    //List<BankAccount> findAll();
-
     Optional<BankAccount> findByUser(User user);
 
     Optional<BankAccount> findById(Long id);
-
-    //void chargeBalance(Long id, Integer amount);
-
-    //void getMoney(String cvv, String cardNumber, User owner, Integer amount);
-
-    //void doTransition(User fromTransaction, Card card, Integer amount);
 
     void delete(Long delete);
 

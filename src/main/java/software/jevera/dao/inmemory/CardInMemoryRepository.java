@@ -23,9 +23,6 @@ public class CardInMemoryRepository implements CardRepository {
 
     private BankAccountRepository bankAccountRepository;
 
-    private AtomicLong counter = new AtomicLong(0);
-
-
     @Override
     public Card save(Card card) {
         cards.add(card);
