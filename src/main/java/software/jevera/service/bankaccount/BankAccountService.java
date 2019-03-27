@@ -1,6 +1,9 @@
 package software.jevera.service.bankaccount;
 
+import lombok.RequiredArgsConstructor;
 import software.jevera.dao.BankAccountRepository;
+import software.jevera.dao.CardRepository;
+import software.jevera.dao.inmemory.CardInMemoryRepository;
 import software.jevera.domain.BankAccount;
 import software.jevera.domain.Card;
 import software.jevera.domain.User;
@@ -11,15 +14,17 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 
 @Component
+@RequiredArgsConstructor
 public class BankAccountService {
 
     private final BankAccountRepository bankAccountRepository;
     private final StateMachine stateMachine;
+    private final CardRepository cardRepository;
 
-    public BankAccountService(BankAccountRepository bankAccountRepository, StateMachine stateMachine) {
-        this.bankAccountRepository = bankAccountRepository;
-        this.stateMachine = stateMachine;
-    }
+//    public BankAccountService(BankAccountRepository bankAccountRepository, StateMachine stateMachine) {
+//        this.bankAccountRepository = bankAccountRepository;
+//        this.stateMachine = stateMachine;
+//    }
 
     public BankAccountRepository getBankAccountRepository() {
         return bankAccountRepository;
@@ -148,6 +153,7 @@ public class BankAccountService {
         }else{
             bankAccount.getCards().add(card);
         }
+        cardRepository.save(card);
         bankAccountRepository.save(bankAccount);
     }
 
