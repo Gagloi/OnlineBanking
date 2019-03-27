@@ -1,13 +1,17 @@
 package software.jevera.domain;
 
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.management.ConstructorParameters;
 import java.time.Instant;
 @Getter
 @Setter
 @AllArgsConstructor
+
+@EqualsAndHashCode(of = "cardNumber")
 public class Card {
 
     private User owner;
@@ -15,12 +19,11 @@ public class Card {
     private String cvv;
     private Instant endDate;
 
-//    public Card(User owner, String cardNumber, String cvv, Instant endDate) {
-//        this.owner = owner;
-//        this.cardNumber = cardNumber;
-//        this.cvv = cvv;
-//        this.endDate = endDate;
-//    }
+    public Card(String cardNumber, String cvv, Instant endDate) {
+        this.cardNumber = cardNumber;
+        this.cvv = cvv;
+        this.endDate = endDate;
+    }
 //
 //    public User getOwner() {
 //        return owner;

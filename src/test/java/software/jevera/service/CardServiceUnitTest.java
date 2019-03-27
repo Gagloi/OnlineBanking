@@ -46,6 +46,8 @@ public class CardServiceUnitTest
     public void addCard()
     {
         User owner = new User();
+        BankAccount bankAccount = new BankAccount();
+        bankAccount.setOwner(owner);
         Card card = new Card(owner, "1", "333", Instant.now());
         cards.add(card);
         when(cardRepository.findCardsByUser(owner)).thenReturn(cards);

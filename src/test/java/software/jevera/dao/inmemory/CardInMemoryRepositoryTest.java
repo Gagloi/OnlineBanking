@@ -1,19 +1,29 @@
 package software.jevera.dao.inmemory;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringRunner;
+import software.jevera.dao.BankAccountRepository;
+import software.jevera.domain.BankAccount;
 import software.jevera.domain.Card;
 import software.jevera.domain.User;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.when;
 
 public class CardInMemoryRepositoryTest {
 
-    private CardInMemoryRepository cardInMemoryRepository = new CardInMemoryRepository();
 
+    private CardInMemoryRepository cardInMemoryRepository = new CardInMemoryRepository();
 
     @Test
     public void save() {
@@ -32,9 +42,9 @@ public class CardInMemoryRepositoryTest {
         User kekUser = new User("oi", "kek");
         User lolUser = new User("oi", "lol");
         List<Card> cards = asList(
-                new Card(kekUser,"1234", "234", Instant.now()),
-                new Card(kekUser,"1234", "234", Instant.now()),
-                new Card(lolUser,"1234", "234", Instant.now())
+                new Card(kekUser,"23347", "234", Instant.now()),
+                new Card(kekUser,"233474", "234", Instant.now()),
+                new Card(lolUser,"762346", "234", Instant.now())
 
         );
 
@@ -56,10 +66,17 @@ public class CardInMemoryRepositoryTest {
     }
 
     @Test
-    public void findAll() {
-    }
-
-    @Test
     public void addCard() {
+        Card card = new Card("1234", "234", Instant.now());
+        User user = new User("123", "Ioi");
+        BankAccount bankAccount = new BankAccount();
+        bankAccount.setOwner(user);
+
+        ArrayList<Card> cards = new ArrayList<>();
+        cards.add(new Card("123423", "423", Instant.now()));
+        bankAccount.setCards(cards);
+
+        cardInMemoryRepository.addCard(user, card);
+        assertEquals(card, cardInMemoryRepository.findCardsByUser(user));
     }
 }

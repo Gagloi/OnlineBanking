@@ -27,10 +27,6 @@ public class CardService {
         return cardRepository.findCardsByUser(user);
     }
 
-    public List<Card> findAll(){
-        return cardRepository.findAll();
-    }
-
     public Card save(Card card){
         return cardRepository.save(card);
     }

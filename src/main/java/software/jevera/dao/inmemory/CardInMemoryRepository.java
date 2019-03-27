@@ -25,8 +25,12 @@ public class CardInMemoryRepository implements CardRepository {
 
     @Override
     public Card save(Card card) {
-        cards.add(card);
-        return card;
+       if(isCardAlreadyExist(card.getCardNumber())){
+           throw new BusinessException("Card already exist");
+       }else{
+           cards.add(card);
+           return card;
+       }
     }
 
     @Override
@@ -48,6 +52,10 @@ public class CardInMemoryRepository implements CardRepository {
 
     private BankAccount getAccountByOwner(BankAccountRepository bankAccountRepository, User owner){
         return bankAccountRepository.findByUser(owner).orElseThrow(() -> new BusinessException("Can not get account by owner"));
+    }
+
+    private boolean isCardAlreadyExist(String cardNumber) {
+        return cards.stream().anyMatch(card -> card.getCardNumber().equals(cardNumber));
     }
 
 }
