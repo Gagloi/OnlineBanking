@@ -1,5 +1,6 @@
 package software.jevera.service.bankaccount;
 
+import lombok.RequiredArgsConstructor;
 import software.jevera.domain.BankAccount;
 import software.jevera.domain.User;
 
@@ -31,6 +32,7 @@ public class StateMachine {
     }
 
     void blockByUser(BankAccount bankAccount){
+        System.out.println(getState(bankAccount));
         getState(bankAccount).blockByUser(bankAccount);
     }
 

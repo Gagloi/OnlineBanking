@@ -1,6 +1,8 @@
 package software.jevera.service.bankaccount;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import software.jevera.dao.BankAccountRepository;
 import software.jevera.dao.CardRepository;
 import software.jevera.dao.inmemory.CardInMemoryRepository;
@@ -21,6 +23,9 @@ public class BankAccountService {
     private final StateMachine stateMachine;
     private final CardRepository cardRepository;
 
+
+
+//    @Autowired
 //    public BankAccountService(BankAccountRepository bankAccountRepository, StateMachine stateMachine) {
 //        this.bankAccountRepository = bankAccountRepository;
 //        this.stateMachine = stateMachine;

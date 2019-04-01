@@ -13,9 +13,11 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import software.jevera.dao.BankAccountRepository;
+import software.jevera.dao.CardRepository;
 import software.jevera.domain.BankAccount;
 import software.jevera.domain.Card;
 import software.jevera.domain.User;
+import software.jevera.service.CardService;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -27,7 +29,7 @@ import static org.mockito.Mockito.*;
 import static software.jevera.service.bankaccount.BankAccountStateEnum.*;
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = {BankAccountService.class, StateMachine.class, BlockedByBank.class,
-        Restored.class, Active.class, BlockedByUser.class})
+        Restored.class, Active.class, BlockedByUser.class, CardRepository.class})
 public class BankAccountServiceUnitTest {
 
     @Autowired
@@ -38,6 +40,9 @@ public class BankAccountServiceUnitTest {
 
     @MockBean
     private StateMachine stateMachine;
+
+    @MockBean
+    private CardRepository cardRepository;
 
     @Test
     public void getBankAccountRepository() {
