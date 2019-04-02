@@ -49,8 +49,8 @@ public class CardInMemoryRepositoryTest {
         );
 
         List<Card> kek = asList(
-                cards.get(0),
-                cards.get(1)
+                cards.get(1),
+                cards.get(0)
         );
 
         List<Card> lol = asList(

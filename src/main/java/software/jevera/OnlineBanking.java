@@ -23,7 +23,9 @@ public class OnlineBanking {
         BankAccountService bankAccountService = context.getBean(BankAccountService.class);
         BankAccount bankAccount = bankAccountService.createBankAccount(new BankAccount(), new User());
         System.out.println(bankAccount);
-
+        //BankAccount id = bankAccountService.
+        bankAccountService.blockByBank(bankAccount.getId());
+        System.out.println(bankAccount);
 
     }
 

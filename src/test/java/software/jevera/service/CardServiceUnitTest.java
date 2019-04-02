@@ -42,22 +42,22 @@ public class CardServiceUnitTest
     }
 
 
-    @Test
-    public void addCard()
-    {
-        User owner = new User();
-        BankAccount bankAccount = new BankAccount();
-        bankAccount.setOwner(owner);
-        Card card = new Card(owner, "1", "333", Instant.now());
-        cards.add(card);
-        when(cardRepository.findCardsByUser(owner)).thenReturn(cards);
-
-        cardService.addCard(card, owner);
-        verify(cardRepository).addCard(owner, card);
-        verify(cardRepository).save(card);
-
-
-    }
+//    @Test
+//    public void addCard()
+//    {
+//        User owner = new User();
+//        BankAccount bankAccount = new BankAccount();
+//        bankAccount.setOwner(owner);
+//        Card card = new Card(owner, "1", "333", Instant.now());
+//        cards.add(card);
+//        when(cardRepository.findCardsByUser(owner)).thenReturn(cards);
+//
+//        cardService.addCard(card, owner);
+//        verify(cardRepository).addCard(owner, card);
+//        verify(cardRepository).save(card);
+//
+//
+//    }
 
     @Test
     public void getCardByUser()
@@ -66,7 +66,8 @@ public class CardServiceUnitTest
         List<Card> cards = new ArrayList<>();
         cards.add(new Card(user, "1", "333", Instant.now()));
         when(cardRepository.findCardsByUser(user)).thenReturn(cards);
-        assertEquals(cards, cardRepository.findCardsByUser(user));
+
+        assertEquals(cards, cardService.getCardByUser(user));
     }
 
     @Test
@@ -76,6 +77,6 @@ public class CardServiceUnitTest
         List<Card> cards = new ArrayList<>();
         cards.add(new Card(user, "1", "333", Instant.now()));
         when(cardRepository.findCardsByUser(user)).thenReturn(cards);
-        assertEquals(cards, cardRepository.findCardsByUser(user));
+        assertEquals(cards, cardService.getCardByUser(user));
     }
 }

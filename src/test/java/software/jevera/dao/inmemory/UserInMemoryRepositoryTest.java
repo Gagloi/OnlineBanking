@@ -21,7 +21,7 @@ public class UserInMemoryRepositoryTest {
                 new User("2", "p2")
         );
         users.forEach(repository::save);
-        assertTrue(repository.isUserAlreadyExist("1"));
+        assertTrue(repository.isUserAlreadyExist("p1"));
         assertFalse(repository.isUserAlreadyExist("5"));
     }
 
