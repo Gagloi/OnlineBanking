@@ -24,6 +24,10 @@ public class Card {
         this.cvv = cvv;
         this.endDate = endDate;
     }
+
+    public Card(){
+
+    }
 //
 //    public User getOwner() {
 //        return owner;

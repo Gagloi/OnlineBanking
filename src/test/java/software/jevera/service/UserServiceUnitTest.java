@@ -12,6 +12,7 @@ import software.jevera.dao.CardRepository;
 import software.jevera.dao.UserRepository;
 import software.jevera.domain.Card;
 import software.jevera.domain.User;
+import software.jevera.domain.UserDto;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
@@ -36,9 +37,10 @@ public class UserServiceUnitTest
     public void registerUser()
     {
         User user = new User("login", "passwd");
+        UserDto userDto = new UserDto("login", "passwd");
         when(userRepository.isUserAlreadyExist("passwd")).thenReturn(false);
-        userService.registerUser(user);
-        verify(userRepository).isUserAlreadyExist("passwd");
+        userService.registerUser(userDto);
+        verify(userRepository).isUserAlreadyExist("login");
     }
 
     @Test
