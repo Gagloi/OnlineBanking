@@ -1,12 +1,14 @@
 package software.jevera.dao.inmemory;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.junit.Test;
 
 import software.jevera.domain.BankAccount;
+import software.jevera.domain.Card;
 import software.jevera.domain.User;
 import software.jevera.service.bankaccount.BankAccountStateEnum;
 
@@ -24,7 +26,7 @@ public class BankAccountInMemoryRepositoryTest
     public void save()
     {
         User user = new User("pwd", "user");
-        BankAccount bankAccount = new BankAccount(1234L, Instant.now(), 10,90 , user , ACTIVE, null);
+        BankAccount bankAccount = new BankAccount(1234L, Instant.now(), 10, user , ACTIVE, null);
         BankAccount saved = bankAccountInMemoryRepository.save(bankAccount);
         Optional<BankAccount> byUser = bankAccountInMemoryRepository.findByUser(user);
         assertEquals(byUser.get(), bankAccount);
@@ -43,7 +45,7 @@ public class BankAccountInMemoryRepositoryTest
 
         User user = new User("pwd", "user007");
 
-        BankAccount bankAccount = new BankAccount(1234L, Instant.now(), 10,90 , user ,ACTIVE, null);
+        BankAccount bankAccount = new BankAccount(1234L, Instant.now(), 10, user ,ACTIVE, null);
         List<BankAccount> bankAccounts = asList(bankAccount, createBankAcc("user1", 1L), createBankAcc("user2", 2L), createBankAcc("user3", 3L));
         bankAccounts.forEach(bankAccountInMemoryRepository::save);
         BankAccount bankAccount1 = bankAccountInMemoryRepository.findByUser(user).get();
@@ -81,4 +83,5 @@ public class BankAccountInMemoryRepositoryTest
         assertEquals(Optional.empty(), bankAccountInMemoryRepository.findById(1L));
 
     }
+
 }

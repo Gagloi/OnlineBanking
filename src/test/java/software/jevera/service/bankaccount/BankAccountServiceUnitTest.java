@@ -58,7 +58,7 @@ public class BankAccountServiceUnitTest {
     public void createBankAccount() {
         User user = new User("pwd", "user");
         User hacker = new User("pwd", "hacker");
-        BankAccount bankAccount = new BankAccount(null, Instant.now(), 10,90 , hacker ,ACTIVE, null);
+        BankAccount bankAccount = new BankAccount(null, Instant.now(), 10, hacker ,ACTIVE, null);
         when(bankAccountRepository.save(bankAccount)).thenReturn(bankAccount);
 
         BankAccount result = bankAccountService.createBankAccount(bankAccount, user);
@@ -132,7 +132,7 @@ public class BankAccountServiceUnitTest {
         bankAccount.setId(id);
         when(bankAccountRepository.findById(id)).thenReturn(Optional.of(bankAccount));
 
-        bankAccountService.chargeBalance(id, amount);
+        bankAccountService.topUpTheBalance(id, amount);
 
         verify(bankAccountRepository).save(bankAccount);
 
@@ -141,7 +141,7 @@ public class BankAccountServiceUnitTest {
     @Test
     public void delete() {
         User user = new User("pwd", "user");
-        BankAccount bankAccount = new BankAccount(1234L, Instant.now(), 10,90 , user ,ACTIVE, null);
+        BankAccount bankAccount = new BankAccount(1234L, Instant.now(), 10, user ,ACTIVE, null);
         bankAccountService.delete(1234L);
         verify(bankAccountRepository).delete(1234L);
     }
@@ -162,6 +162,9 @@ public class BankAccountServiceUnitTest {
 
         when(bankAccountRepository.findByUser(user)).thenReturn(Optional.of(bankAccountFrom));
         when(bankAccountRepository.findByUser(userTo)).thenReturn(Optional.of(bankAccountTo));
+        ArrayList<Card> cards = new ArrayList<>();
+        cards.add(card);
+        when(cardRepository.findAll()).thenReturn(cards);
         bankAccountService.doTransition(user, card, 10);
         verify(bankAccountRepository).save(bankAccountFrom);
         verify(bankAccountRepository).save(bankAccountTo);
@@ -174,7 +177,7 @@ public class BankAccountServiceUnitTest {
         Card card = new Card(user, "1", "333", Instant.now());
         ArrayList<Card> cards = new ArrayList<>();
         cards.add(card);
-        BankAccount bankAccount = new BankAccount(1L, Instant.now(), 11 , 123, user, ACTIVE, cards);
+        BankAccount bankAccount = new BankAccount(1L, Instant.now(), 11 , user, ACTIVE, cards);
         when(bankAccountRepository.findByUser(user)).thenReturn(Optional.of(bankAccount));
         bankAccountService.getMoney(card.getCvv(), card.getCardNumber(), user, 10);
         verify(bankAccountRepository).save(bankAccount);

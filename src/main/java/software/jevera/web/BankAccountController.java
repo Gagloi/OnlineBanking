@@ -34,15 +34,32 @@ public class BankAccountController {
         return bankAccountService.findByUser(getUser());
     }
 
-    @PostMapping("/bankAccount/{id}/blockByBank")
+    @PostMapping("/bankaccount/{id}/blockbybank")
     public void blockByBank(@PathVariable("id") Long id) {
         bankAccountService.blockByBank(id);
     }
 
-    @PostMapping("/bankAccount")
+    @PostMapping("/bankaccount")
     public void addCard(CardDto card) {
         bankAccountService.addCard(getUser(), cardMapper.toCard(card));
     }
+
+    @PostMapping("/bankaccount/topup")
+    public void topUpTheBalance(Long id, Integer amount) {
+        bankAccountService.topUpTheBalance(id, amount);
+    }
+
+    @PostMapping("/bankaccount/getmoney")
+    public void getMoney(String cvv, String cardNumber, Integer amount) {
+        bankAccountService.getMoney(cvv, cardNumber, getUser(), amount);
+    }
+
+    @PostMapping("/bankaccount/dotransition")
+    public void doTransition(CardDto card,Integer amount) {
+        bankAccountService.doTransition(getUser(), cardMapper.toCard(card), amount);
+    }
+
+
 
     private User getUser(){
         return (User) httpSession.getAttribute("user");
