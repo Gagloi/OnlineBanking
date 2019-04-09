@@ -39,22 +39,22 @@ public class BankAccountController {
         bankAccountService.blockByBank(id);
     }
 
-    @PostMapping("/bankaccount")
+    @PostMapping("/addcard")
     public void addCard(CardDto card) {
         bankAccountService.addCard(getUser(), cardMapper.toCard(card));
     }
 
-    @PostMapping("/bankaccount/topup")
+    @PostMapping("/topup")
     public void topUpTheBalance(Long id, Integer amount) {
         bankAccountService.topUpTheBalance(id, amount);
     }
 
-    @PostMapping("/bankaccount/getmoney")
+    @PostMapping("/getmoney")
     public void getMoney(String cvv, String cardNumber, Integer amount) {
         bankAccountService.getMoney(cvv, cardNumber, getUser(), amount);
     }
 
-    @PostMapping("/bankaccount/dotransition")
+    @PostMapping("/dotransition")
     public void doTransition(CardDto card,Integer amount) {
         bankAccountService.doTransition(getUser(), cardMapper.toCard(card), amount);
     }
