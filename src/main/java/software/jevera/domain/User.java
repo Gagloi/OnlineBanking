@@ -1,5 +1,6 @@
 package software.jevera.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 @Setter
@@ -9,6 +10,7 @@ import lombok.*;
 @ToString
 @EqualsAndHashCode(of = "login")
 public class User {
+    @JsonIgnore
     private String passwordHash;
     private String login;
 

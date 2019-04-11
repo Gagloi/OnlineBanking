@@ -1,6 +1,11 @@
 package software.jevera.service.bankaccount;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import software.jevera.dao.BankAccountRepository;
+import software.jevera.dao.CardRepository;
+import software.jevera.dao.inmemory.CardInMemoryRepository;
 import software.jevera.domain.BankAccount;
 import software.jevera.domain.Card;
 import software.jevera.domain.User;
@@ -9,17 +14,24 @@ import software.jevera.exceptions.BusinessException;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Component
+@RequiredArgsConstructor
 public class BankAccountService {
 
     private final BankAccountRepository bankAccountRepository;
     private final StateMachine stateMachine;
+    private final CardRepository cardRepository;
 
-    public BankAccountService(BankAccountRepository bankAccountRepository, StateMachine stateMachine) {
-        this.bankAccountRepository = bankAccountRepository;
-        this.stateMachine = stateMachine;
-    }
+
+
+//    @Autowired
+//    public BankAccountService(BankAccountRepository bankAccountRepository, StateMachine stateMachine) {
+//        this.bankAccountRepository = bankAccountRepository;
+//        this.stateMachine = stateMachine;
+//    }
 
     public BankAccountRepository getBankAccountRepository() {
         return bankAccountRepository;
@@ -46,7 +58,7 @@ public class BankAccountService {
     }
 
     private BankAccount getBankAccountByUser(User owner){
-        return bankAccountRepository.findByUser(owner).orElseThrow(() -> new BusinessException("Cannot get Bank Account by user!"));
+        return bankAccountRepository.findByUser(owner).orElseThrow(() -> new BusinessException("Cannot get Bank Account by user or no BankAccount!"));
     }
 
     public void restoreByBank(Long id){
@@ -78,7 +90,7 @@ public class BankAccountService {
     }
 
 
-    public void chargeBalance(Long id, Integer amount){
+    public void topUpTheBalance(Long id, Integer amount){
         BankAccount bankAccount = bankAccountRepository.findById(id).orElseThrow(() -> new BusinessException("Can not find Bank Account"));
         isBlocked(bankAccount);
         if(isNegative(amount)) {
@@ -97,7 +109,9 @@ public class BankAccountService {
 
     public void doTransition(User fromTransaction, Card card, Integer amount) {
         BankAccount from = findByUser(fromTransaction);
-        BankAccount to = findByUser(card.getOwner());
+        System.out.println(card.toString());
+        //BankAccount to = findByUser(card.getOwner());
+        BankAccount to = findByCardNumber(card.getCardNumber());
         isBlocked(from);
         isBlocked(to);
         if(from.getBalance() > amount){
@@ -148,7 +162,17 @@ public class BankAccountService {
         }else{
             bankAccount.getCards().add(card);
         }
+        card.setOwner(owner);
+        cardRepository.save(card);
         bankAccountRepository.save(bankAccount);
+    }
+
+    private BankAccount findByCardNumber(String cardNumber){
+
+        List<Card> cards = cardRepository.findAll();
+        Optional<Card> mainCard = cards.stream().filter(card -> card.getCardNumber().equals(cardNumber)).findAny();
+        System.out.println("lol" + cardNumber);
+        return findByUser(mainCard.get().getOwner());
     }
 
 }

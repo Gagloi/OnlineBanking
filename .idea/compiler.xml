@@ -5,10 +5,8 @@
       <profile default="true" name="Default" enabled="true" />
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="Bank.main" target="11" />
-      <module name="Bank.test" target="11" />
-      <module name="OnlineBanking.main" target="11" />
-      <module name="OnlineBanking.test" target="11" />
+      <module name="OnlineBanking.main" target="1.10" />
+      <module name="OnlineBanking.test" target="1.10" />
     </bytecodeTargetLevel>
   </component>
 </project>

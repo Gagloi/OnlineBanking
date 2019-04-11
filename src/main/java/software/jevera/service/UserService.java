@@ -2,7 +2,9 @@ package software.jevera.service;
 
 import software.jevera.dao.UserRepository;
 import software.jevera.domain.User;
+import software.jevera.domain.UserDto;
 import software.jevera.exceptions.BusinessException;
+import software.jevera.exceptions.UncorrectGrant;
 import software.jevera.exceptions.UserAlreadyExist;
 
 import java.math.BigInteger;
@@ -20,13 +22,15 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public User registerUser(User user) {
-
-        if (userRepository.isUserAlreadyExist(user.getLogin())) {
-            throw new UserAlreadyExist(user.getLogin());
+    public User registerUser(UserDto userDto) {
+        if (userRepository.isUserAlreadyExist(userDto.getLogin())) {
+            throw new BusinessException("Опоздал ты с логином!");
         }
-        return userRepository.save(user);
 
+        User user = new User();
+        user.setLogin(userDto.getLogin());
+        user.setPasswordHash(encryptPassword(userDto.getPassword()));
+        return userRepository.save(user);
     }
 
     private static String encryptPassword(String password) {
@@ -40,6 +44,17 @@ public class UserService {
             throw new RuntimeException(e);
         }
 
+    }
+
+    public User login(UserDto userDto) {
+        return userRepository.findUserByLogin(userDto.getLogin())
+                .filter(user -> checkPassword(userDto, user))
+                .orElseThrow(UncorrectGrant::new);
+    }
+
+    private boolean checkPassword(UserDto userDto, User user) {
+        String encryptPassword = encryptPassword(userDto.getPassword());
+        return encryptPassword.equals(user.getPasswordHash());
     }
 
     public User findUserByLogin(String login){
