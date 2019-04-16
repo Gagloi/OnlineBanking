@@ -133,6 +133,7 @@ public class BankAccountServiceUnitTest {
         when(bankAccountRepository.findById(id)).thenReturn(Optional.of(bankAccount));
 
         bankAccountService.topUpTheBalance(id, amount);
+        System.out.println("///////////////////////" + bankAccount.toString());
 
         verify(bankAccountRepository).save(bankAccount);
 

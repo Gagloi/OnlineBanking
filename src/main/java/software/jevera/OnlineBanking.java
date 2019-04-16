@@ -27,7 +27,6 @@ public class OnlineBanking {
 
         BankAccount bankAccount = bankAccountService.createBankAccount(new BankAccount(), user);
 
-        System.out.println(bankAccount);
 
         //bankAccountService.blockByBank(bankAccount.getId());
     }

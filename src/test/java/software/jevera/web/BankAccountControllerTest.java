@@ -5,6 +5,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -48,6 +50,9 @@ public class BankAccountControllerTest {
     @MockBean
     private BankAccountService bankAccountService;
 
+    @MockBean
+    private CardMapper cardMapper;
+
     @Configuration
     public static class BankAccountTestConfiguration{
         @Bean
@@ -90,6 +95,7 @@ public class BankAccountControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andReturn();
+        Mockito.verify(bankAccountService).createBankAccount(bankAccount, user);
 
     }
 
@@ -102,11 +108,16 @@ public class BankAccountControllerTest {
     public void addCard() {
 
         Map<String, Object> sessionattr = new HashMap<>();
-        sessionattr.put("cardDto", new CardDto());
+        CardDto cardDto = new CardDto();
+        cardDto.setCardNumber("1234123412341234");
+        User user = new User();
+        sessionattr.put("card", cardDto);
+        sessionattr.put("user", user);
 
         mockMvc.perform(post("/api/bankaccounts/addcard").sessionAttrs(sessionattr))
                 .andDo(print())
                 .andExpect(status().isOk());
+        Mockito.verify(bankAccountService).addCard(user, cardMapper.toCard(cardDto));
 
     }
 
@@ -116,16 +127,18 @@ public class BankAccountControllerTest {
 
         Map<String, Object> sessionattr = new HashMap<>();
         BankAccount bankAccount = new BankAccount();
-        bankAccountService.createBankAccount(bankAccount, new User());
         bankAccount.setId(2L);
+        User user = new User();
+        bankAccount.setOwner(user);
+
         sessionattr.put("id", bankAccount.getId());
         sessionattr.put("amount", 10);
 
-        System.out.println(sessionattr);
-        mockMvc.perform(post("/api/bankaccounts/topup")
-                .sessionAttrs(sessionattr))
+        System.out.println(bankAccount);
+        mockMvc.perform(post("/api/bankaccounts/topup").sessionAttrs(sessionattr))
                 .andDo(print())
                 .andExpect(status().isOk());
+        Mockito.verify(bankAccountService).topUpTheBalance(bankAccount.getId(), bankAccount.getBalance());
 
     }
 
@@ -147,7 +160,7 @@ public class BankAccountControllerTest {
                 .sessionAttrs(sessionattr))
                 .andDo(print())
                 .andExpect(status().isOk());
-
+        Mockito.verify(bankAccountService).getMoney(card.getCvv(), card.getCardNumber(), new User(), 10);
     }
 
     @Test
@@ -158,7 +171,9 @@ public class BankAccountControllerTest {
 
         Card card = new Card("123", "eqw", Instant.now());
 
-        sessionattr.put("card", card);
+        CardDto cardDto = new CardDto();
+        cardDto.setCardNumber("1234123412341234");
+        sessionattr.put("card", cardDto);
         sessionattr.put("amount", 10);
 
         System.out.println(sessionattr);
@@ -166,6 +181,7 @@ public class BankAccountControllerTest {
                 .sessionAttrs(sessionattr))
                 .andDo(print())
                 .andExpect(status().isOk());
+        Mockito.verify(bankAccountService).doTransition(new User(), cardMapper.toCard(cardDto), 10);
 
     }
 }

@@ -13,6 +13,7 @@ import software.jevera.service.bankaccount.BankAccountService;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @RequestMapping("/api/bankaccounts")
@@ -25,7 +26,7 @@ public class BankAccountController {
     private final HttpSession httpSession;
 
     @PostMapping
-    public BankAccount create(BankAccountDto bankAccount){
+    public BankAccount create(@RequestBody BankAccountDto bankAccount){
         return bankAccountService.createBankAccount(bankAccMapper.toBankaccount(bankAccount), getUser());
     }
 
@@ -34,18 +35,34 @@ public class BankAccountController {
         return bankAccountService.findByUser(getUser());
     }
 
-    @PostMapping("/bankaccount/{id}/blockbybank")
+    @PostMapping("/blockbybank/{id}")
     public void blockByBank(@PathVariable("id") Long id) {
         bankAccountService.blockByBank(id);
     }
 
+    @PostMapping("/blockbyuser")
+    public void blockByUser() {
+        bankAccountService.blockByUser(getUser());
+    }
+
+    @PostMapping("/restorebyuser")
+    public void restoreByUser() {
+        bankAccountService.restoreByUser(getUser());
+    }
+
+    @PostMapping("/restorebybank/{id}")
+    public void restoreByBank(@PathVariable("id") Long id) {
+        bankAccountService.restoreByBank(id);
+    }
+
+
     @PostMapping("/addcard")
-    public void addCard(CardDto card) {
+    public void addCard(@RequestParam(value = "card", required = false) CardDto card) {
         bankAccountService.addCard(getUser(), cardMapper.toCard(card));
     }
 
     @PostMapping("/topup")
-    public void topUpTheBalance(Long id, Integer amount) {
+    public void topUpTheBalance(@RequestParam(value = "id", required = false) Long id, @RequestParam(value = "amount", required = false) Integer amount) {
         bankAccountService.topUpTheBalance(id, amount);
     }
 
@@ -55,7 +72,7 @@ public class BankAccountController {
     }
 
     @PostMapping("/dotransition")
-    public void doTransition(CardDto card,Integer amount) {
+    public void doTransition(@RequestParam(value = "card", required = false) CardDto card,Integer amount) {
         bankAccountService.doTransition(getUser(), cardMapper.toCard(card), amount);
     }
 
