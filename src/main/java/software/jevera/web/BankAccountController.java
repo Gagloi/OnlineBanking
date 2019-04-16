@@ -50,6 +50,11 @@ public class BankAccountController {
         bankAccountService.restoreByUser(getUser());
     }
 
+    @PostMapping("/activate/{id}")
+    public void activate(@PathVariable("id") Long id) {
+        bankAccountService.activate(id);
+    }
+
     @PostMapping("/restorebybank/{id}")
     public void restoreByBank(@PathVariable("id") Long id) {
         bankAccountService.restoreByBank(id);
@@ -57,7 +62,7 @@ public class BankAccountController {
 
 
     @PostMapping("/addcard")
-    public void addCard(@RequestParam(value = "card", required = false) CardDto card) {
+    public void addCard(@RequestBody CardDto card) {
         bankAccountService.addCard(getUser(), cardMapper.toCard(card));
     }
 

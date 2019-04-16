@@ -108,16 +108,16 @@ public class BankAccountControllerTest {
     public void addCard() {
 
         Map<String, Object> sessionattr = new HashMap<>();
-        CardDto cardDto = new CardDto();
-        cardDto.setCardNumber("1234123412341234");
+        CardDto card = new CardDto();
+        card.setCardNumber("1234123412341234");
+        card.setCvv("123");
+        card.setEndDate(Instant.now());
+        sessionattr.put("card", card);
         User user = new User();
-        sessionattr.put("card", cardDto);
-        sessionattr.put("user", user);
-
         mockMvc.perform(post("/api/bankaccounts/addcard").sessionAttrs(sessionattr))
                 .andDo(print())
                 .andExpect(status().isOk());
-        Mockito.verify(bankAccountService).addCard(user, cardMapper.toCard(cardDto));
+        Mockito.verify(bankAccountService).addCard(user, cardMapper.toCard(card));
 
     }
 

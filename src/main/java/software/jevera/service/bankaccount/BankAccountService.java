@@ -85,6 +85,12 @@ public class BankAccountService {
         bankAccountRepository.save(bankAccount);
     }
 
+    public void activate(Long id){
+        BankAccount bankAccount = getBankAccountById(id);
+        stateMachine.activate(bankAccount);
+        bankAccountRepository.save(bankAccount);
+    }
+
     public BankAccount findByUser(User user){
         return bankAccountRepository.findByUser(user).orElseThrow(() -> new BusinessException("Can not find bank account by user"));
     }
