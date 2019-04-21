@@ -5,10 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import software.jevera.domain.BankAccount;
 import software.jevera.domain.Card;
 import software.jevera.domain.User;
-import software.jevera.domain.dto.BankAccMapper;
-import software.jevera.domain.dto.BankAccountDto;
-import software.jevera.domain.dto.CardDto;
-import software.jevera.domain.dto.CardMapper;
+import software.jevera.domain.dto.*;
 import software.jevera.service.bankaccount.BankAccountService;
 
 import javax.servlet.http.HttpSession;
@@ -67,8 +64,8 @@ public class BankAccountController {
     }
 
     @PostMapping("/topup")
-    public void topUpTheBalance(@RequestParam(value = "id", required = false) Long id, @RequestParam(value = "amount", required = false) Integer amount) {
-        bankAccountService.topUpTheBalance(id, amount);
+    public void topUpTheBalance(@RequestBody TopUpDto topUpDto) {
+        bankAccountService.topUpTheBalance(topUpDto, getUser());
     }
 
     @PostMapping("/getmoney")

@@ -9,6 +9,7 @@ import software.jevera.dao.inmemory.CardInMemoryRepository;
 import software.jevera.domain.BankAccount;
 import software.jevera.domain.Card;
 import software.jevera.domain.User;
+import software.jevera.domain.dto.TopUpDto;
 import software.jevera.exceptions.BusinessException;
 
 import org.springframework.stereotype.Component;
@@ -96,14 +97,22 @@ public class BankAccountService {
     }
 
 
-    public void topUpTheBalance(Long id, Integer amount){
-        BankAccount bankAccount = bankAccountRepository.findById(id).orElseThrow(() -> new BusinessException("Can not find Bank Account"));
+    public void topUpTheBalance(TopUpDto topUpDto, User user){
+        BankAccount bankAccount = bankAccountRepository.findByUser(user).orElseThrow(() -> new BusinessException("Can not find Bank Account"));
         isBlocked(bankAccount);
-        if(isNegative(amount)) {
-            bankAccount.setBalance(bankAccount.getBalance() + amount);
-            bankAccountRepository.save(bankAccount);
+        Optional<Card> card = bankAccount.getCards()
+                .stream()
+                .filter(it -> it.getCardNumber().equals(topUpDto.getCardNumber()) && it.getCvv().equals(topUpDto.getCvv()))
+                .findAny();
+        if (card.isPresent()) {
+            if (isNegative(topUpDto.getAmount())) {
+                bankAccount.setBalance(bankAccount.getBalance() + topUpDto.getAmount());
+                bankAccountRepository.save(bankAccount);
+            } else {
+                throw new BusinessException("Низья отрицательное число ворюга!");
+            }
         }else{
-            throw new BusinessException("Низья отрицательное число ворюга!");
+            throw new BusinessException("Ca not find card");
         }
         //bankAccountRepository.chargeBalance(id, amount);
     }
