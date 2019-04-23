@@ -4,14 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import software.jevera.dao.CardRepository;
+import software.jevera.dao.UserRepository;
 import software.jevera.domain.Card;
 import software.jevera.domain.User;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -19,6 +19,8 @@ import java.util.List;
 public class CardJdbcRepository implements CardRepository {
 
     private final ConnectionManager connectionManager;
+
+    private final UserRepository userRepository;
 
     @Override
     @SneakyThrows
@@ -54,13 +56,20 @@ public class CardJdbcRepository implements CardRepository {
 
     @Override
     public List<Card> findCardsByUser(User user) {
+
+        List<Card> cards = new ArrayList<>();
+
         try (Connection connection = connectionManager.createConnection()){
-            String sql = "SELECT * FROM card WHERE owner_login =?";
+            String sql = "SELECT * FROM card INNER JOIN user u on card.owner_login = u.login WHERE owner_login = ?";
             try(PreparedStatement statement = connection.prepareStatement(sql)){
 
                 statement.setString(1, user.getLogin());
-                statement.execute();
-
+                try(ResultSet set = statement.executeQuery()){
+                    while (set.next()){
+                        Card card = new Card();
+                        card.setOwner(set.getObject("owner", User.class));
+                    }
+                }
             }
 
         }catch (SQLException e){

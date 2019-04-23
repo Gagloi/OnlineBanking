@@ -21,8 +21,8 @@ public class jdbcRepositoryConfiguration {
     }
 
     @Bean
-    public CardRepository cardInMemoryRepository(ConnectionManager connectionManager){
-        return new CardJdbcRepository(connectionManager);
+    public CardRepository cardInMemoryRepository(ConnectionManager connectionManager, UserRepository userRepository){
+        return new CardJdbcRepository(connectionManager, userRepository);
     }
 
     @Bean
