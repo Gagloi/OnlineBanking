@@ -4,8 +4,8 @@ import software.jevera.dao.UserRepository;
 import software.jevera.domain.User;
 import software.jevera.domain.UserDto;
 import software.jevera.exceptions.BusinessException;
+import software.jevera.exceptions.EncryptRuntimeException;
 import software.jevera.exceptions.UncorrectGrant;
-import software.jevera.exceptions.UserAlreadyExist;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -41,7 +41,7 @@ public class UserService {
             crypt.update(password.getBytes(UTF_8));
             return new BigInteger(1, crypt.digest()).toString(16);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new EncryptRuntimeException(e.getMessage());
         }
 
     }
