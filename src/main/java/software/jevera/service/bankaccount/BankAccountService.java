@@ -28,12 +28,6 @@ public class BankAccountService {
 
 
 
-//    @Autowired
-//    public BankAccountService(BankAccountRepository bankAccountRepository, StateMachine stateMachine) {
-//        this.bankAccountRepository = bankAccountRepository;
-//        this.stateMachine = stateMachine;
-//    }
-
     public BankAccountRepository getBankAccountRepository() {
         return bankAccountRepository;
     }
@@ -114,7 +108,6 @@ public class BankAccountService {
         }else{
             throw new BusinessException("Ca not find card");
         }
-        //bankAccountRepository.chargeBalance(id, amount);
     }
 
     public void delete(Long id){
@@ -124,12 +117,10 @@ public class BankAccountService {
 
     public void doTransition(User fromTransaction, Card card, Integer amount) {
         BankAccount from = findByUser(fromTransaction);
-        System.out.println(card.toString());
-        //BankAccount to = findByUser(card.getOwner());
         BankAccount to = findByCardNumber(card.getCardNumber());
         isBlocked(from);
         isBlocked(to);
-        if(from.getBalance() > amount){
+        if(from.getBalance() >= amount){
             from.setBalance(from.getBalance() - amount);
             to.setBalance(to.getBalance() + amount);
             bankAccountRepository.save(from);
@@ -143,17 +134,20 @@ public class BankAccountService {
     public void getMoney(String cvv, String cardNumber, User owner, Integer amount){
         BankAccount bankAccount = findByUser(owner);
         isBlocked(bankAccount);
-        Card card = bankAccount.getCards().stream()
+        Optional<Card> myCard = bankAccount.getCards().stream()
                 .filter(it -> (it.getCardNumber().equals(cardNumber) && it.getCvv().equals(cvv)))
-                .findFirst()
-                .orElseThrow(() -> new BusinessException("Bad credentials"));
-        if(bankAccount.getBalance() > amount){
+                .findAny();
+        if (!myCard.isPresent()){
+            throw new BusinessException("Bad credentials");
+        }
+
+        if(bankAccount.getBalance() >= amount){
             bankAccount.setBalance(bankAccount.getBalance() - amount);
             bankAccountRepository.save(bankAccount);
         }else{
             throw new BusinessException("Ты бомж!");
         }
-        //bankAccountRepository.getMoney(cvv, cardNumber, owner, amount);
+
     }
 
     private boolean isNegative(Integer amount){
