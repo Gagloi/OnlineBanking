@@ -9,7 +9,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
 
-@Repository
+
 public class UserInMemoryRepository implements UserRepository {
 
     private final List<User> users = new ArrayList<>();

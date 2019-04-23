@@ -1,0 +1,4 @@
+<dataset>
+    <USER LOGIN="login" PASSWORD_HASH="pwd"/>
+    <CARD CARD_NUMBER="123" CVV="321" END_DATE="1970-01-01T00:00:00Z" OWNER_LOGIN="login" />
+</dataset>

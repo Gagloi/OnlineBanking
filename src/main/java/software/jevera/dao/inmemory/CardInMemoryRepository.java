@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Repository;
 
-@Repository
+
 public class CardInMemoryRepository implements CardRepository {
 
     private Set<Card> cards = new HashSet<>();

@@ -70,7 +70,7 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: end_date
-                  type: date
+                  type: varchar(255)
                   constraints:
                     nullable: false
         - addForeignKeyConstraint:
@@ -83,5 +83,11 @@ databaseChangeLog:
             baseColumnNames: owner_login
             baseTableName: card
             constraintName: fk_card_owner
+            referencedColumnNames: login
+            referencedTableName: user
+        - addForeignKeyConstraint:
+            baseColumnNames: owner_login
+            baseTableName: bank_account
+            constraintName: fk_bank_account_owner
             referencedColumnNames: login
             referencedTableName: user

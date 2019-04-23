@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Repository;
 
-@Repository
+
 public class BankAccountInMemoryRepository implements BankAccountRepository {
 
     private Set<BankAccount> bankAccounts = new HashSet<>();
