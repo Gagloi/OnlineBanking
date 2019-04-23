@@ -17,6 +17,7 @@ import software.jevera.dao.CardRepository;
 import software.jevera.domain.BankAccount;
 import software.jevera.domain.Card;
 import software.jevera.domain.User;
+import software.jevera.domain.dto.TopUpDto;
 import software.jevera.service.CardService;
 
 import java.time.Instant;
@@ -130,9 +131,20 @@ public class BankAccountServiceUnitTest {
         Integer amount = 10;
         BankAccount bankAccount = new BankAccount();
         bankAccount.setId(id);
+        User user = new User();
+        bankAccount.setOwner(user);
+        when(bankAccountRepository.findByUser(user)).thenReturn(Optional.of(bankAccount));
         when(bankAccountRepository.findById(id)).thenReturn(Optional.of(bankAccount));
-
-        bankAccountService.topUpTheBalance(id, amount);
+        Card card = new Card();
+        card.setCardNumber("123");
+        card.setCvv("123");
+        bankAccount.setCards(new ArrayList<>());
+        bankAccount.getCards().add(card);
+        TopUpDto topUpDto = new TopUpDto();
+        topUpDto.setAmount(10);
+        topUpDto.setCardNumber("123");
+        topUpDto.setCvv("123");
+        bankAccountService.topUpTheBalance(topUpDto, new User());
         System.out.println("///////////////////////" + bankAccount.toString());
 
         verify(bankAccountRepository).save(bankAccount);
