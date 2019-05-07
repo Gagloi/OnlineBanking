@@ -1,93 +1,94 @@
 databaseChangeLog:
   - changeSet:
-      id: 1
+      id: 3
       author: ypiven
       changes:
-        - createTable:
-            tableName: user
-            columns:
-              - column:
-                  name: login
-                  type: varchar(255)
-                  constraints:
-                    primaryKey: true
-                    nullable: false
-              - column:
-                  name: password_hash
-                  type: varchar(255)
-                  constraints:
-                    nullable: false
-        - createTable:
-            tableName: bank_account
-            columns:
-              - column:
-                  name: id
-                  type: bigint
-                  autoIncrement: true
-                  constraints:
-                    primaryKey: true
-                    nullable: false
-              - column:
-                  name: creation_date
-                  type: date
-                  constraints:
-                    nullable: false
-              - column:
-                  name: balance
-                  type: int
-              - column:
-                  name: current_state
-                  type: varchar(255)
-                  constraints:
-                    nullable: false
-              - column:
-                  name: owner_login
-                  type: varchar(255)
-                  constraints:
-                    nullable: false
-              - column:
-                  name: buyer_login
-                  type: varchar(255)
-              - column:
-                  name: card_number
-                  type: varchar(255)
-        - createTable:
-            tableName: card
-            columns:
-              - column:
-                  name: card_number
-                  type: varchar(255)
-                  constraints:
-                    primaryKey: true
-                    nullable: false
-              - column:
-                  name: cvv
-                  type: varchar(3)
-              - column:
-                  name: owner_login
-                  type: varchar(255)
-                  constraints:
-                    nullable: false
-              - column:
-                  name: end_date
-                  type: varchar(255)
-                  constraints:
-                    nullable: false
-        - addForeignKeyConstraint:
-            baseColumnNames: card_number
-            baseTableName: bank_account
-            constraintName: fk_card_bank_account
-            referencedColumnNames: card_number
-            referencedTableName: card
-        - addForeignKeyConstraint:
-            baseColumnNames: owner_login
-            baseTableName: card
-            constraintName: fk_card_owner
-            referencedColumnNames: login
-            referencedTableName: user
-        - addForeignKeyConstraint:
-            baseColumnNames: owner_login
-            baseTableName: bank_account
-            constraintName: fk_bank_account_owner
-            referencedColumnNames: login
-            referencedTableName: user
+#        - createTable:
+#            tableName: user
+#            columns:
+#              - column:
+#                  name: login
+#                  type: varchar(255)
+#                  constraints:
+#                    primaryKey: true
+#                    nullable: false
+#              - column:
+#                  name: password_hash
+#                  type: varchar(255)
+#                  constraints:
+#                    nullable: false
+#        - createTable:
+#            tableName: bank_account
+#            columns:
+#              - column:
+#                  name: id
+#                  type: bigint
+#                  autoIncrement: true
+#                  constraints:
+#                    primaryKey: true
+#                    nullable: false
+#              - column:
+#                  name: creation_date
+#                  type: date
+#                  constraints:
+#                    nullable: false
+#              - column:
+#                  name: balance
+#                  type: int
+#              - column:
+#                  name: current_state
+#                  type: varchar(255)
+#                  constraints:
+#                    nullable: false
+#              - column:
+#                  name: owner_login
+#                  type: varchar(255)
+#                  constraints:
+#                    nullable: false
+#              - column:
+#                  name: buyer_login
+#                  type: varchar(255)
+#              - column:
+#                  name: card_number
+#                  type: varchar(255)
+#        - createTable:
+#            tableName: card
+#            columns:
+#              - column:
+#                  name: card_number
+#                  type: varchar(255)
+#                  constraints:
+#                    primaryKey: true
+#                    nullable: false
+#              - column:
+#                  name: cvv
+#                  type: varchar(3)
+#              - column:
+#                  name: owner_login
+#                  type: varchar(255)
+#                  constraints:
+#                    nullable: false
+#              - column:
+#                  name: end_date
+#                  type: varchar(255)
+#                  constraints:
+#                    nullable: false
+#        - addForeignKeyConstraint:
+#            baseColumnNames: card_number
+#            baseTableName: bank_account
+#            constraintName: fk_card_bank_account
+#            referencedColumnNames: card_number
+#            referencedTableName: card
+#        - addForeignKeyConstraint:
+#            baseColumnNames: owner_login
+#            baseTableName: card
+#            constraintName: fk_card_owner
+#            referencedColumnNames: login
+#            referencedTableName: user
+#        - addForeignKeyConstraint:
+#            baseColumnNames: owner_login
+#            baseTableName: bank_account
+#            constraintName: fk_bank_account_owner
+#            referencedColumnNames: login
+#            referencedTableName: user
+
