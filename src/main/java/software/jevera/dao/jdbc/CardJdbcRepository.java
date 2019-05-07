@@ -11,6 +11,7 @@ import software.jevera.domain.Card;
 import software.jevera.domain.User;
 
 import java.sql.*;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,28 +27,35 @@ public class CardJdbcRepository implements CardRepository {
     @SneakyThrows
     public Card save(Card card) {
         try (Connection connection = connectionManager.createConnection()) {
+            connection.setAutoCommit(false);
+            try {
+                if (card.getCardNumber() == null) {
+                    try (Statement statement = connection.createStatement()) {
 
-            if (card.getCardNumber() == null) {
-                try (Statement statement = connection.createStatement()) {
+                        statement.executeUpdate(String.format("INSERT into card" +
+                                        "(card_number, cvv, owner_login, end_date) " +
+                                        "values ('%s', '%s', '%s', '%s')",
+                                card.getCardNumber(),
+                                card.getCvv(),
+                                card.getOwner().getLogin(),
+                                card.getEndDate().toString()));
+                    }
 
-                    statement.executeUpdate(String.format("INSERT into card " +
-                                    "(card_number, cvv, owner_login, end_date) " +
-                                    "values ('%s', '%s', '%s', '%s')",
-                            card.getCardNumber(),
-                            card.getCvv(),
-                            card.getOwner().getLogin(),
-                            card.getEndDate().toString()));
+                } else {
+
+                    String sql = "UPDATE card SET cvv=? WHERE card_number=?";
+                    try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+                        preparedStatement.setString(1, card.getCvv());
+                        preparedStatement.setString(2, card.getCardNumber());
+                        preparedStatement.executeUpdate();
+                    }
+
                 }
-
-            }else {
-
-                String sql = "UPDATE card SET cvv=? WHERE card_number=?";
-                try(PreparedStatement preparedStatement = connection.prepareStatement(sql)){
-                    preparedStatement.setString(1, card.getCvv());
-                    preparedStatement.setString(2, card.getCardNumber());
-                    preparedStatement.executeUpdate();
-                }
-
+                connection.commit();
+            } catch (Exception e) {
+                log.error("Error saving card {}", e);
+                connection.rollback();
+                throw e;
             }
         }
 
@@ -55,6 +63,7 @@ public class CardJdbcRepository implements CardRepository {
     }
 
     @Override
+    @SneakyThrows
     public List<Card> findCardsByUser(User user) {
 
         List<Card> cards = new ArrayList<>();
@@ -67,7 +76,11 @@ public class CardJdbcRepository implements CardRepository {
                 try(ResultSet set = statement.executeQuery()){
                     while (set.next()){
                         Card card = new Card();
-                        card.setOwner(set.getObject("owner", User.class));
+                        card.setOwner(new User(set.getString("user.login"), set.getString("user.password_hash")));
+                        card.setCvv(set.getString("cvv"));
+                        card.setEndDate(set.getObject("end_date", Instant.class));
+                        card.setCardNumber(set.getString("card_number"));
+                        cards.add(card);
                     }
                 }
             }
@@ -75,11 +88,32 @@ public class CardJdbcRepository implements CardRepository {
         }catch (SQLException e){
             log.error("Error: ", e);
         }
-        return null;
+        return cards;
     }
 
     @Override
     public List<Card> findAll() {
-        return null;
+        List<Card> cards = new ArrayList<>();
+
+        try (Connection connection = connectionManager.createConnection()){
+            String sql = "SELECT * FROM card";
+            try(PreparedStatement statement = connection.prepareStatement(sql)){
+
+                try(ResultSet set = statement.executeQuery()){
+                    while (set.next()){
+                        Card card = new Card();
+                        card.setOwner(new User(set.getString("user.login"), set.getString("user.password_hash")));
+                        card.setCvv(set.getString("cvv"));
+                        card.setEndDate(set.getObject("end_date", Instant.class));
+                        card.setCardNumber(set.getString("card_number"));
+                        cards.add(card);
+                    }
+                }
+            }
+
+        }catch (SQLException e){
+            log.error("Error: ", e);
+        }
+        return cards;
     }
 }
