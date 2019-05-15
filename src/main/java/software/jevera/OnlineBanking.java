@@ -7,11 +7,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 
 
-
+import software.jevera.dao.jdbc.CardJdbcRepository;
 import software.jevera.domain.BankAccount;
 import software.jevera.domain.Card;
 import software.jevera.domain.User;
+import software.jevera.domain.UserDto;
+import software.jevera.domain.dto.CardMapper;
 import software.jevera.service.CardService;
+import software.jevera.service.UserService;
 import software.jevera.service.bankaccount.BankAccountService;
 import software.jevera.service.bankaccount.BankAccountStateEnum;
 import software.jevera.service.bankaccount.StateMachine;
@@ -23,20 +26,17 @@ import java.time.Instant;
 @SpringBootApplication
 public class OnlineBanking {
 
+
     public static void main(String[] args) {
         ApplicationContext context = SpringApplication.run(OnlineBanking.class, args);
         BankAccountService bankAccountService = context.getBean(BankAccountService.class);
-        CardService cardService = context.getBean(CardService.class);
-        User user = new User();
 
-        BankAccount bankAccount = bankAccountService.createBankAccount(new BankAccount(), user);
-
-        Card card = new Card(user, "123", "123", Instant.now());
-        cardService.save(card);
-
-
-
-        //bankAccountService.blockByBank(bankAccount.getId());
     }
 
 }
+
+
+//CardJdbcRepository 97
+//exequte update???
+//BankAccountJdbc 47
+

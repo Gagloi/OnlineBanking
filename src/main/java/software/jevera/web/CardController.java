@@ -25,6 +25,11 @@ public class CardController {
         return cardService.getCardByUser(getUser());
     }
 
+    @GetMapping(value = "findAll")
+    public List<Card> getAllCards(){
+        return cardService.findAll();
+    }
+
 
 
     private User getUser(){

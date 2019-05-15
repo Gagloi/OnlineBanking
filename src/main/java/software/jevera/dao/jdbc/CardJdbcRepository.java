@@ -29,28 +29,17 @@ public class CardJdbcRepository implements CardRepository {
         try (Connection connection = connectionManager.createConnection()) {
             connection.setAutoCommit(false);
             try {
-                if (card.getCardNumber() == null) {
-                    try (Statement statement = connection.createStatement()) {
 
-                        statement.executeUpdate(String.format("INSERT into card" +
-                                        "(card_number, cvv, owner_login, end_date) " +
-                                        "values ('%s', '%s', '%s', '%s')",
-                                card.getCardNumber(),
-                                card.getCvv(),
-                                card.getOwner().getLogin(),
-                                card.getEndDate().toString()));
-                    }
-
-                } else {
-
-                    String sql = "UPDATE card SET cvv=? WHERE card_number=?";
+                    String sql = "INSERT into card (card_number, cvv, owner_login, end_date) values (? , ? , ? , ?)";
                     try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-                        preparedStatement.setString(1, card.getCvv());
-                        preparedStatement.setString(2, card.getCardNumber());
+                        preparedStatement.setString(1, card.getCardNumber());
+                        preparedStatement.setString(2, card.getCvv());
+                        preparedStatement.setString(3, card.getOwner().getLogin());
+                        preparedStatement.setString(4, card.getEndDate().toString());
                         preparedStatement.executeUpdate();
                     }
 
-                }
+
                 connection.commit();
             } catch (Exception e) {
                 log.error("Error saving card {}", e);
@@ -69,16 +58,16 @@ public class CardJdbcRepository implements CardRepository {
         List<Card> cards = new ArrayList<>();
 
         try (Connection connection = connectionManager.createConnection()){
-            String sql = "SELECT * FROM card INNER JOIN user u on card.owner_login = u.login WHERE owner_login = ?";
+            String sql = "SELECT card.card_number, card.owner_login, card.cvv, card.end_date, owner.login, owner.password_hash FROM card INNER JOIN owner on card.owner_login = owner.login WHERE owner_login = ?";
             try(PreparedStatement statement = connection.prepareStatement(sql)){
 
                 statement.setString(1, user.getLogin());
                 try(ResultSet set = statement.executeQuery()){
                     while (set.next()){
                         Card card = new Card();
-                        card.setOwner(new User(set.getString("user.login"), set.getString("user.password_hash")));
+                        card.setOwner(new User(set.getString("owner_login")));
                         card.setCvv(set.getString("cvv"));
-                        card.setEndDate(set.getObject("end_date", Instant.class));
+                        //card.setEndDate(set.getObject("end_date", Instant.class));
                         card.setCardNumber(set.getString("card_number"));
                         cards.add(card);
                     }
@@ -88,6 +77,7 @@ public class CardJdbcRepository implements CardRepository {
         }catch (SQLException e){
             log.error("Error: ", e);
         }
+        log.info("Cards {}", cards);
         return cards;
     }
 
@@ -102,9 +92,9 @@ public class CardJdbcRepository implements CardRepository {
                 try(ResultSet set = statement.executeQuery()){
                     while (set.next()){
                         Card card = new Card();
-                        card.setOwner(new User(set.getString("user.login"), set.getString("user.password_hash")));
+                        card.setOwner(new User(set.getString("owner_login")));
                         card.setCvv(set.getString("cvv"));
-                        card.setEndDate(set.getObject("end_date", Instant.class));
+                        //card.setEndDate(set.getObject("end_date", Instant.class));
                         card.setCardNumber(set.getString("card_number"));
                         cards.add(card);
                     }
@@ -114,6 +104,7 @@ public class CardJdbcRepository implements CardRepository {
         }catch (SQLException e){
             log.error("Error: ", e);
         }
+        log.info("Cards {}", cards);
         return cards;
     }
 }

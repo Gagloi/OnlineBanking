@@ -35,6 +35,7 @@ public class User {
 //        this.login = login;
 //    }
 //
-//    public User() {
-//    }
+    public User(String login) {
+        this.login = login;
+    }
 }
