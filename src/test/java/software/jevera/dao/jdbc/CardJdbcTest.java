@@ -12,6 +12,7 @@ import liquibase.database.DatabaseFactory;
 import liquibase.database.jvm.JdbcConnection;
 import liquibase.resource.ClassLoaderResourceAccessor;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
@@ -33,6 +34,7 @@ import static junit.framework.TestCase.assertNotNull;
 
 @RunWith(JUnit4.class)
 @DBUnit(url = CardJdbcTest.DB_URL, driver = "org.h2.Driver", user = "postgres")
+@Slf4j
 public class CardJdbcTest {
 
     public static final String DB_URL = "jdbc:h2:mem:db;DB_CLOSE_DELAY=-1;MODE=PostgreSQL";
@@ -61,21 +63,25 @@ public class CardJdbcTest {
         cardJdbcRepository = new CardJdbcRepository(connectionManager, new UserJdbcRepository(connectionManager));
     }
 
+    private Card createCard(String cardNumber, String cvv, Instant createDate, User owner){
+        Card card = new Card(owner, cardNumber, cvv, createDate);
+        log.info("Creating card with values {}", card);
+        return card;
+    }
     @Test
     @DataSet(value = "testSaveCard.xml")
     @ExpectedDataSet(value = "testSaveCard-expected.xml")
     public void testSaveCard(){
-        Card card = new Card();
-        card.setCardNumber("123");
-        card.setCvv("321");
-        card.setEndDate(Instant.ofEpochSecond(0));
-        User user = new User();
-        user.setLogin("login");
-        user.setPasswordHash("pwd");
-        card.setOwner(user);
+        Card card = createCard("123", "123", Instant.ofEpochSecond(0), new User("pwd", "login"));
+//        Card card = new Card();
+//        card.setCardNumber("123");
+//        card.setCvv("123");
+//        card.setEndDate(Instant.ofEpochSecond(0));
+//        User user = new User();
+//        user.setLogin("login");
+//        user.setPasswordHash("pwd");
+//        card.setOwner(user);
         Card savedCard = cardJdbcRepository.save(card);
-
-        System.out.println(savedCard+"_______________________________________________________________________");
 
         assertNotNull(savedCard.getCardNumber());
     }
@@ -87,21 +93,12 @@ public class CardJdbcTest {
         User user = new User();
         user.setLogin("login");
         user.setPasswordHash("pwd");
-        Card card = new Card();
-        card.setCardNumber("123");
-        card.setCvv("123");
-        card.setOwner(user);
-        card.setEndDate(Instant.ofEpochSecond(0));
-
-        Card card1 = new Card();
-        card1.setCardNumber("321");
-        card1.setCvv("321");
-        card1.setOwner(user);
-        card1.setEndDate(Instant.ofEpochSecond(0));
-
-
+        Card card = createCard("123", "123", Instant.ofEpochSecond(0), user);
+        Card card1 = createCard("321", "321", Instant.ofEpochSecond(0), user);
 
         List<Card> cards = cardJdbcRepository.findCardsByUser(user);
+        log.info("CARD 0 {}", cards.get(0));
+        log.info("CARD 1 {}", cards.get(1));
 
         assertNotNull(cards);
 
@@ -112,13 +109,9 @@ public class CardJdbcTest {
     @DataSet(value = "testUpdateCard.xml")
     @ExpectedDataSet(value = "testUpdateCard-expected.xml")
     public void testUpdateCard(){
-        Card card = new Card();
-        card.setCardNumber("123");
-        card.setCvv("321");
-        card.setEndDate(Instant.ofEpochSecond(0));
-
-
-        Card savedCard = cardJdbcRepository.save(card);
+        List<Card> cards = cardJdbcRepository.findCardsByUser(new User("pwd", "login"));
+        log.info(" CARD {}", cards.get(0));
+        Card savedCard = cardJdbcRepository.save(cards.get(0));
 
         assertNotNull(savedCard.getCardNumber());
     }
